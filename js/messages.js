@@ -45,26 +45,73 @@ async function loadOnlineFriends() {
   const listEl = document.getElementById('online-friends-list');
   if (!listEl) return;
   
-  // To keep it simple without complex queries, we fetch the first 10 online users
-  const q = query(collection(db, 'users'), where('online', '==', true), limit(15));
+  // First, add the "You" item
+  const myNoteHtml = `
+    <div class="note-person-item" onclick="promptNoteStatus()" style="width:75px;flex-shrink:0;cursor:pointer;position:relative;display:flex;flex-direction:column;align-items:center;">
+       <div style="position:relative;margin-bottom:4px;margin-top:16px;">
+           <div class="ig-note-bubble" style="color:var(--text-muted);font-size:1.2rem;padding:0px 8px;line-height:1.2;">+</div>
+           ${getAvatarHTML(user, 'lg', 'note-person-avatar')}
+       </div>
+       <div class="note-person-name" style="font-size:0.75rem;max-width:75px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-muted);">Tu nota</div>
+    </div>`;
+
+  const q = query(collection(db, 'users'), limit(20));
   onSnapshot(q, snap => {
-    let html = '';
+    let html = myNoteHtml;
     snap.forEach(docSnap => {
       const u = docSnap.data();
       if (docSnap.id === user.uid) return; // Skip self
+      if (!u.online && !u.noteText) return; // Only show if online or has note
+      
+      const IGNote = u.noteText ? `<div class="ig-note-bubble">${u.noteText}</div>` : '';
+      const onlineDot = u.online ? `<div class="chat-item-online-dot" style="width:14px;height:14px;bottom:2px;right:2px"></div>` : '';
+
       html += `
-        <div class="note-person-item" onclick="window.openChatWith('${docSnap.id}')" style="width:60px">
-          <div style="position:relative">
+        <div class="note-person-item" onclick="window.openChatWith('${docSnap.id}')" style="width:75px;flex-shrink:0;cursor:pointer;position:relative;display:flex;flex-direction:column;align-items:center;">
+          <div style="position:relative;margin-bottom:4px;margin-top:16px;">
+            ${IGNote}
             ${getAvatarHTML(u, 'lg', 'note-person-avatar')}
-            <div class="chat-item-online-dot" style="width:14px;height:14px;bottom:2px;right:2px"></div>
+            ${onlineDot}
           </div>
-          <div class="note-person-name" style="max-width:60px">${u.displayName?.split(' ')[0] || 'User'}</div>
+          <div class="note-person-name" style="font-size:0.75rem;max-width:75px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${u.displayName?.split(' ')[0] || 'User'}</div>
         </div>`;
     });
-    if (!html) html = '<div style="font-size:0.75rem;color:var(--text-muted);padding:8px">No hay amigos en línea</div>';
     listEl.innerHTML = html;
   });
 }
+
+window.promptNoteStatus = async () => {
+    const { createModal, openModal, closeModal, showToast } = await import('./ui.js');
+    const modalId = 'ig-note-modal';
+    if (!document.getElementById(modalId)) {
+      createModal({
+        id: modalId,
+        title: 'Crear publicación',
+        content: `
+          <div style="display:flex; flex-direction:column; gap:12px; padding: 12px 0;">
+            <button class="btn btn-primary" onclick="window.submitIgNote()">💬 Dejar una Nota (Burbuja)</button>
+            <button class="btn btn-secondary" onclick="window.closeModalById('${modalId}'); window.openUploadStory()">📸 Subir Estado de 24h</button>
+          </div>
+        `,
+        size: 'sm'
+      });
+    }
+    
+    window.submitIgNote = async () => {
+      const text = prompt("Escribe una nota corta (ej. 'Feliz lunes!'):");
+      if (text !== null) {
+        const user = getCurrentUser();
+        if (!user) return;
+        try {
+          await updateDoc(doc(db, 'users', user.uid), { noteText: text.substring(0, 60) });
+          showToast('Nota publicada en tu burbuja', 'success');
+          closeModal(modalId);
+        } catch(e) { console.error(e); }
+      }
+    };
+
+    openModal(modalId);
+};
 
 /* ── Chat List ── */
 async function loadChatList() {
