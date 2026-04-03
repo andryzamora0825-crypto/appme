@@ -55,8 +55,14 @@
 /* Avatar */
 .profile-avatar-wrap {
   position: absolute;
-  bottom: -55px; left: var(--space-xl);
-  z-index: 2;
+  top: -65px; left: var(--space-xl);
+  z-index: 15;
+}
+.profile-avatar-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 40px;
 }
 .profile-avatar {
   width: 130px; height: 130px;

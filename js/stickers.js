@@ -12,200 +12,83 @@ import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/fireba
 import { showToast } from './ui.js';
 import { generateId, STICKER_COLORS, STICKER_BG_GRADIENTS, canvasToBlob } from './utils.js';
 
-let canvas, ctx;
-let stickerText     = '';
-let textColor       = '#4ADE80';
-let textShadow      = false;
-let bgType          = 'transparent';
-let bgColor         = '';
-let fontFamily      = 'Outfit, sans-serif';
-let fontSize        = 42;
-let textAlign       = 'center';
-let textBold        = true;
-let textItalic      = false;
-let emojiOverlay    = '';
-const CANVAS_SIZE   = 400;
+let uploadedStickerFile = null;
 
 /* ─── Init Creator ─── */
 export function initStickerCreator() {
-  canvas = document.getElementById('sticker-canvas');
-  if (!canvas) return;
-  canvas.width = canvas.height = CANVAS_SIZE;
-  ctx = canvas.getContext('2d');
-  renderCanvas();
+  const uploadInput = document.getElementById('sticker-image-upload');
+  const previewContainer = document.getElementById('sticker-preview-container');
+  const uploadPrompt = document.getElementById('sticker-upload-prompt');
+  const previewImg = document.getElementById('sticker-preview-img');
+  
+  uploadInput?.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    if (!file.type.startsWith('image/')) { showToast('Selecciona una imagen', 'error'); return; }
+    if (file.size > 5 * 1024 * 1024) { showToast('El archivo es muy grande (Max 5MB)', 'error'); return; }
 
-  // Text input
-  document.getElementById('sticker-text-input')?.addEventListener('input', (e) => {
-    stickerText = e.target.value; renderCanvas();
+    uploadedStickerFile = file;
+    
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      previewImg.src = event.target.result;
+      uploadPrompt.style.display = 'none';
+      previewContainer.style.display = 'flex';
+      previewContainer.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
   });
 
-  // Colors
-  document.querySelectorAll('.sticker-color-swatch').forEach(s => {
-    s.addEventListener('click', () => {
-      document.querySelectorAll('.sticker-color-swatch').forEach(x => x.classList.remove('active'));
-      s.classList.add('active');
-      textColor = s.dataset.color; renderCanvas();
-    });
+  document.getElementById('sticker-cancel-btn')?.addEventListener('click', () => {
+    uploadedStickerFile = null;
+    uploadInput.value = '';
+    previewImg.src = '';
+    const nameInp = document.getElementById('sticker-name-input');
+    if (nameInp) nameInp.value = '';
+    previewContainer.style.display = 'none';
+    uploadPrompt.style.display = 'flex';
   });
 
-  // Font size
-  document.getElementById('sticker-font-size')?.addEventListener('input', (e) => {
-    fontSize = parseInt(e.target.value);
-    document.getElementById('font-size-val').textContent = fontSize;
-    renderCanvas();
-  });
-
-  // Font family
-  document.getElementById('sticker-font-select')?.addEventListener('change', (e) => {
-    fontFamily = e.target.value; renderCanvas();
-  });
-
-  // Style buttons
-  document.getElementById('sticker-bold')?.addEventListener('click', (e) => {
-    textBold = !textBold; e.currentTarget.classList.toggle('active', textBold); renderCanvas();
-  });
-  document.getElementById('sticker-italic')?.addEventListener('click', (e) => {
-    textItalic = !textItalic; e.currentTarget.classList.toggle('active', textItalic); renderCanvas();
-  });
-  document.getElementById('sticker-shadow')?.addEventListener('click', (e) => {
-    textShadow = !textShadow; e.currentTarget.classList.toggle('active', textShadow); renderCanvas();
-  });
-
-  // Background options
-  document.querySelectorAll('.sticker-bg-option').forEach(opt => {
-    opt.addEventListener('click', () => {
-      document.querySelectorAll('.sticker-bg-option').forEach(x => x.classList.remove('active'));
-      opt.classList.add('active');
-      bgType  = opt.dataset.type;
-      bgColor = opt.dataset.gradient || opt.dataset.color || '';
-      renderCanvas();
-    });
-  });
-
-  // Emoji bar
-  document.querySelectorAll('.sticker-emoji-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      emojiOverlay = emojiOverlay === btn.textContent ? '' : btn.textContent;
-      renderCanvas();
-    });
-  });
-
-  // Canvas action buttons
-  document.getElementById('canvas-clear-btn')?.addEventListener('click', () => {
-    stickerText = ''; emojiOverlay = '';
-    document.getElementById('sticker-text-input').value = '';
-    renderCanvas();
-  });
-  document.getElementById('canvas-download-btn')?.addEventListener('click', downloadSticker);
-  document.getElementById('canvas-save-btn')?.addEventListener('click', saveSticker);
-}
-
-/* ─── Render Canvas ─── */
-function renderCanvas() {
-  if (!ctx) return;
-  ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-
-  // Draw background
-  if (bgType === 'color' && bgColor) {
-    ctx.fillStyle = bgColor; ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-  } else if (bgType === 'gradient' && bgColor) {
-    const grad = parseGradientToCanvas(bgColor);
-    ctx.fillStyle = grad; ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-  }
-  // transparent: don't fill
-
-  // Draw emoji
-  if (emojiOverlay) {
-    ctx.font = `${CANVAS_SIZE * 0.45}px sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(emojiOverlay, CANVAS_SIZE / 2, CANVAS_SIZE / 2);
-  }
-
-  // Draw text
-  if (stickerText) {
-    const weight = textBold ? 'bold ' : '';
-    const style  = textItalic ? 'italic ' : '';
-    ctx.font = `${style}${weight}${fontSize}px ${fontFamily}`;
-    ctx.textAlign    = textAlign;
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle    = textColor;
-
-    if (textShadow) {
-      ctx.shadowColor   = 'rgba(0,0,0,0.6)';
-      ctx.shadowBlur    = 8;
-      ctx.shadowOffsetX = 2;
-      ctx.shadowOffsetY = 2;
-    } else {
-      ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
-    }
-
-    const lines = wrapText(stickerText, CANVAS_SIZE - 40, ctx);
-    const lineH = fontSize * 1.3;
-    const totalH = lines.length * lineH;
-    const startY = (CANVAS_SIZE - totalH) / 2 + lineH / 2 + (emojiOverlay ? CANVAS_SIZE * 0.25 : 0);
-    lines.forEach((line, i) => {
-      ctx.fillText(line, CANVAS_SIZE / 2, startY + i * lineH);
-    });
-    ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
-  }
-}
-
-function wrapText(text, maxWidth, context) {
-  const words  = text.split(' ');
-  const lines  = [];
-  let current  = '';
-  for (const word of words) {
-    const test = current ? `${current} ${word}` : word;
-    if (context.measureText(test).width > maxWidth && current) {
-      lines.push(current); current = word;
-    } else { current = test; }
-  }
-  if (current) lines.push(current);
-  return lines;
-}
-
-function parseGradientToCanvas(gradientStr) {
-  // Simplified: extract colors from linear-gradient(135deg, #color1, #color2)
-  const matches = gradientStr.match(/#[0-9a-fA-F]{3,6}/g) || ['#4ADE80','#22C55E'];
-  const grad    = ctx.createLinearGradient(CANVAS_SIZE * 0.1, CANVAS_SIZE * 0.1, CANVAS_SIZE * 0.9, CANVAS_SIZE * 0.9);
-  grad.addColorStop(0, matches[0] || '#4ADE80');
-  grad.addColorStop(1, matches[1] || '#22C55E');
-  return grad;
-}
-
-/* ─── Download ─── */
-function downloadSticker() {
-  const link   = document.createElement('a');
-  link.download = `sticker-${Date.now()}.png`;
-  link.href     = canvas.toDataURL('image/png');
-  link.click();
+  document.getElementById('sticker-save-btn')?.addEventListener('click', saveSticker);
 }
 
 /* ─── Save to Firebase ─── */
 async function saveSticker() {
   const user = getCurrentUser();
   if (!user) { showToast('Inicia sesión para guardar', 'info'); return; }
-  const name = document.getElementById('sticker-name-input')?.value.trim() || 'Mi Sticker';
-  const btn  = document.getElementById('canvas-save-btn');
-  btn.disabled    = true; btn.textContent = 'Guardando...';
+  if (!uploadedStickerFile) { showToast('Primero selecciona una imagen', 'info'); return; }
+
+  const nameInput = document.getElementById('sticker-name-input');
+  const name = nameInput?.value.trim() || 'Sticker';
+  const btn = document.getElementById('sticker-save-btn');
+  btn.disabled = true; btn.textContent = 'Guardando...';
+
   try {
-    const blob     = await canvasToBlob(canvas, 'image/png');
     const stickRef = ref(storage, `stickers/${user.uid}/${generateId('stk')}.png`);
-    await uploadBytes(stickRef, blob);
+    await uploadBytes(stickRef, uploadedStickerFile);
     const imageURL = await getDownloadURL(stickRef);
+    
     await addDoc(collection(db, 'stickers'), {
       authorId: user.uid, name, imageURL,
       tags: [], usageCount: 0, createdAt: serverTimestamp()
     });
-    showToast(`Sticker "${name}" guardado 🎨`, 'success');
-    loadStickerGallery(); // refresh gallery
+    
+    showToast(`Sticker guardado exitosamente 🎨`, 'success');
+    
+    // Reset UI
+    document.getElementById('sticker-cancel-btn')?.click();
+    
+    // Refresh gallery
+    loadStickerGallery();
   } catch(e) {
     showToast('Error al guardar sticker', 'error'); console.error(e);
   } finally {
     btn.disabled = false; btn.textContent = '💾 Guardar Sticker';
   }
 }
+
 
 /* ─── Gallery ─── */
 export async function loadStickerGallery(filterUid = null) {

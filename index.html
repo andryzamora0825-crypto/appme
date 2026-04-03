@@ -6,16 +6,16 @@
   <title>Zamora MSG</title>
   
   <!-- CSS -->
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/auth.css">
-  <link rel="stylesheet" href="css/feed.css">
-  <link rel="stylesheet" href="css/stories.css">
-  <link rel="stylesheet" href="css/messages.css">
-  <link rel="stylesheet" href="css/profile.css">
-  <link rel="stylesheet" href="css/stickers.css">
-  <link rel="stylesheet" href="css/notes.css">
-  <link rel="stylesheet" href="css/settings.css">
+  <link rel="stylesheet" href="css/main.css?v=2">
+  <link rel="stylesheet" href="css/layout.css?v=2">
+  <link rel="stylesheet" href="css/auth.css?v=2">
+  <link rel="stylesheet" href="css/feed.css?v=2">
+  <link rel="stylesheet" href="css/stories.css?v=2">
+  <link rel="stylesheet" href="css/messages.css?v=2">
+  <link rel="stylesheet" href="css/profile.css?v=3">
+  <link rel="stylesheet" href="css/stickers.css?v=2">
+  <link rel="stylesheet" href="css/notes.css?v=2">
+  <link rel="stylesheet" href="css/settings.css?v=2">
 </head>
 <body>
 
@@ -465,83 +465,31 @@
       <section id="stickers-page" class="page">
         <div class="stickers-layout">
           <div class="sticker-creator-panel">
-            <h2 style="font-family:'Outfit';margin-bottom:16px">Creador de Stickers</h2>
+            <h2 style="font-family:'Outfit';margin-bottom:16px">Subir Sticker</h2>
             
-            <div class="sticker-canvas-container">
-              <canvas id="sticker-canvas"></canvas>
-            </div>
-
-            <div class="sticker-tools">
-              <div class="input-group">
-                <label>Texto del sticker</label>
-                <input type="text" id="sticker-text-input" class="input" placeholder="Escribe algo...">
-              </div>
+            <div class="sticker-upload-card card-glass" style="padding: 24px; text-align: center; border: 2px dashed rgba(74,222,128,0.3); border-radius: var(--radius-xl); transition: all 0.3s ease; position: relative;">
               
-              <div class="tool-section">
-                <label>Color</label>
-                <div class="sticker-color-picker">
-                  <div class="sticker-color-swatch active" data-color="#4ADE80" style="background:#4ADE80"></div>
-                  <div class="sticker-color-swatch" data-color="#22C55E" style="background:#22C55E"></div>
-                  <div class="sticker-color-swatch" data-color="#F87171" style="background:#F87171"></div>
-                  <div class="sticker-color-swatch" data-color="#60A5FA" style="background:#60A5FA"></div>
-                  <div class="sticker-color-swatch" data-color="#FBBF24" style="background:#FBBF24"></div>
-                  <div class="sticker-color-swatch" data-color="#A78BFA" style="background:#A78BFA"></div>
-                  <div class="sticker-color-swatch" data-color="#F472B6" style="background:#F472B6"></div>
-                  <div class="sticker-color-swatch" data-color="#FFFFFF" style="background:#FFFFFF"></div>
-                  <div class="sticker-color-swatch" data-color="#1A1A1A" style="background:#1A1A1A;border:1px solid #333"></div>
+              <div id="sticker-upload-prompt" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px 0;">
+                <div style="font-size: 3rem; text-shadow: var(--shadow-glow);">🖼️</div>
+                <h3 style="color: var(--text-primary); font-family: 'Outfit';">Sube tu Imagen</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Soporta PNG, JPG, GIF (Recomendado: fondo transparente)</p>
+                <label class="btn btn-primary" style="margin-top: 12px; cursor: pointer; padding: 10px 24px;">
+                  Seleccionar archivo
+                  <input type="file" id="sticker-image-upload" accept="image/*" class="hidden">
+                </label>
+              </div>
+
+              <div id="sticker-preview-container" class="hidden" style="display: none; flex-direction: column; align-items: center; gap: 16px;">
+                <img id="sticker-preview-img" style="max-width: 100%; max-height: 250px; object-fit: contain; border-radius: var(--radius-md); box-shadow: var(--shadow-md); background: rgba(0,0,0,0.3); padding: 12px;">
+                <div class="input-group" style="width: 100%;">
+                  <input type="text" id="sticker-name-input" class="input" placeholder="Ponle un nombre a tu sticker..." style="text-align: center; background: rgba(255,255,255,0.05);">
+                </div>
+                <div style="display: flex; gap: 12px; width: 100%;">
+                  <button class="btn btn-secondary" id="sticker-cancel-btn" style="flex: 1;">Cancelar</button>
+                  <button class="btn btn-primary" id="sticker-save-btn" style="flex: 2;">💾 Guardar Sticker</button>
                 </div>
               </div>
 
-              <div class="tool-section">
-                <label>Fondo</label>
-                <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">
-                  <div class="sticker-bg-option active" data-type="transparent">Transparente</div>
-                  <div class="sticker-bg-option" data-type="gradient" data-gradient="linear-gradient(135deg,#4ADE80,#22C55E)" style="background:linear-gradient(135deg,#4ADE80,#22C55E)"></div>
-                  <div class="sticker-bg-option" data-type="gradient" data-gradient="linear-gradient(135deg,#3730A3,#7C3AED)" style="background:linear-gradient(135deg,#3730A3,#7C3AED)"></div>
-                  <div class="sticker-bg-option" data-type="gradient" data-gradient="linear-gradient(135deg,#BE185D,#F472B6)" style="background:linear-gradient(135deg,#BE185D,#F472B6)"></div>
-                  <div class="sticker-bg-option" data-type="gradient" data-gradient="linear-gradient(135deg,#1a1a1a,#0a1a0a)" style="background:linear-gradient(135deg,#1a1a1a,#0a1a0a)"></div>
-                </div>
-              </div>
-
-              <div class="tool-section">
-                <label>Tipografía</label>
-                <div style="display:flex;gap:8px">
-                  <select id="sticker-font-select" class="input" style="flex:1">
-                    <option value="Outfit, sans-serif">Outfit</option>
-                    <option value="Inter, sans-serif">Inter</option>
-                    <option value="Impact, sans-serif">Impact</option>
-                    <option value="Courier New, monospace">Mono</option>
-                    <option value="Brush Script MT, cursive">Cursiva</option>
-                  </select>
-                  <label class="sticker-style-btn active" id="sticker-bold" title="Negrita">B</label>
-                  <label class="sticker-style-btn" id="sticker-italic" title="Cursiva">I</label>
-                  <label class="sticker-style-btn" id="sticker-shadow" title="Sombra">S</label>
-                </div>
-              </div>
-
-              <div class="tool-section">
-                <label>Tamaño <span id="font-size-val">42</span>px</label>
-                <input type="range" id="sticker-font-size" min="20" max="150" value="42" style="width:100%">
-              </div>
-
-              <div class="tool-section">
-                <label>Emoji principal</label>
-                <div class="sticker-emoji-bar">
-                  <div class="sticker-emoji-btn">😂</div><div class="sticker-emoji-btn">🔥</div>
-                  <div class="sticker-emoji-btn">❤️</div><div class="sticker-emoji-btn">👀</div>
-                  <div class="sticker-emoji-btn">💀</div><div class="sticker-emoji-btn">✨</div>
-                  <div class="sticker-emoji-btn">🌿</div><div class="sticker-emoji-btn">😎</div>
-                </div>
-              </div>
-
-              <div class="input-group" style="margin-top:16px">
-                <input type="text" id="sticker-name-input" class="input" placeholder="Nombre (ej. Buen día)">
-              </div>
-
-              <div style="display:flex;gap:8px;margin-top:16px">
-                <button class="btn btn-secondary" id="canvas-clear-btn" style="flex:1">Limpiar</button>
-                <button class="btn btn-primary" id="canvas-save-btn" style="flex:2">💾 Guardar Sticker</button>
-              </div>
             </div>
           </div>
 
@@ -583,65 +531,413 @@
       <section id="settings-page" class="page">
         <div class="settings-container">
           <div class="settings-header">Configuración</div>
-          
+
+          <!-- Profile Card -->
           <div class="settings-profile-card">
             <div style="display:flex;align-items:center;gap:16px">
-              <img id="settings-avatar" class="avatar avatar-lg" style="display:none" alt="">
-              <div class="avatar avatar-lg avatar-placeholder" id="settings-initial">?</div>
-              <div>
+              <div style="position:relative;">
+                <img id="settings-avatar" class="avatar avatar-lg" style="display:none" alt="">
+                <div class="avatar avatar-lg avatar-placeholder" id="settings-initial">?</div>
+                <div class="settings-avatar-badge" id="settings-status-badge"></div>
+              </div>
+              <div style="flex:1">
                 <div class="settings-card-name" id="settings-profile-name"></div>
                 <div class="settings-card-sub" id="settings-profile-email"></div>
-                <div class="settings-card-sub" id="settings-profile-handle" style="margin-top:4px"></div>
+                <div class="settings-card-sub" id="settings-profile-handle" style="margin-top:4px;color:var(--primary)"></div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+                  <div class="status-dot"></div>
+                  <span style="font-size:0.78rem;color:var(--text-muted)">En línea ahora</span>
+                </div>
               </div>
             </div>
             <div style="display:flex;gap:8px;margin-top:16px">
               <button class="btn btn-primary btn-sm" id="settings-go-profile">Ver perfil</button>
-              <button class="btn btn-secondary btn-sm" id="settings-go-edit">Editar Perfil</button>
+              <button class="btn btn-secondary btn-sm" id="settings-go-edit">✏️ Editar</button>
             </div>
           </div>
 
-          <div class="settings-section">
-            <div class="settings-section-title">Seguridad y Cuenta</div>
-            <div class="settings-item" onclick="document.getElementById('change-password-modal').classList.remove('hidden')">
-              <div class="settings-item-icon">🔒</div><span>Cambiar contraseña</span>
-            </div>
-            <div class="settings-item">
-              <div class="settings-item-icon">📱</div><span>Dispositivos activos</span>
-              <span style="margin-left:auto;font-size:0.85rem;color:var(--text-muted)">1 dispositivo</span>
-            </div>
-            <div class="settings-item" id="settings-logout-btn">
-              <div class="settings-item-icon" style="color:var(--danger)">🚪</div>
-              <span style="color:var(--danger)">Cerrar sesión</span>
-            </div>
+          <!-- Settings Tabs -->
+          <div class="settings-tabs" id="settings-tabs">
+            <div class="settings-tab active" data-section="account">🔑 Cuenta</div>
+            <div class="settings-tab" data-section="appearance">🎨 Apariencia</div>
+            <div class="settings-tab" data-section="privacy">🛡️ Privacidad</div>
+            <div class="settings-tab" data-section="notifications">🔔 Notificaciones</div>
+            <div class="settings-tab" data-section="accessibility">♿ Accesibilidad</div>
+            <div class="settings-tab" data-section="danger">⛔ Zona peligrosa</div>
           </div>
 
-          <div class="settings-section">
-            <div class="settings-section-title">Privacidad</div>
-            <div class="settings-item">
-              <div style="flex:1">
-                <div>Mostrar estado "En línea"</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Otros podrán ver cuando estés conectado</div>
+          <!-- ── Account ── -->
+          <div class="settings-section-panel active" id="settings-panel-account">
+            <div class="settings-section">
+              <div class="settings-section-title">Información de cuenta</div>
+              <div class="settings-item settings-item-info">
+                <div class="settings-item-icon">📧</div>
+                <div style="flex:1">
+                  <div style="font-size:0.78rem;color:var(--text-muted)">Correo electrónico</div>
+                  <div id="info-email" style="font-weight:600"></div>
+                </div>
               </div>
-              <div class="toggle-switch on settings-privacy-toggle" data-key="onlineStatus"></div>
-            </div>
-            <div class="settings-item">
-              <div style="flex:1">
-                <div>Confirmaciones de lectura</div>
-                <div style="font-size:0.8rem;color:var(--text-muted)">Otros verán cuando hayas leído sus mensajes</div>
+              <div class="settings-item settings-item-info">
+                <div class="settings-item-icon">👤</div>
+                <div style="flex:1">
+                  <div style="font-size:0.78rem;color:var(--text-muted)">Nombre de usuario</div>
+                  <div id="info-username" style="font-weight:600"></div>
+                </div>
               </div>
-              <div class="toggle-switch on settings-privacy-toggle" data-key="readReceipts"></div>
+              <div class="settings-item settings-item-info">
+                <div class="settings-item-icon">🗓️</div>
+                <div style="flex:1">
+                  <div style="font-size:0.78rem;color:var(--text-muted)">Miembro desde</div>
+                  <div id="info-joined" style="font-weight:600"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Seguridad</div>
+              <div class="settings-item" onclick="document.getElementById('change-password-modal').classList.remove('hidden')">
+                <div class="settings-item-icon">🔒</div>
+                <span>Cambiar contraseña</span>
+                <svg style="margin-left:auto;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+              <div class="settings-item" id="settings-2fa-item">
+                <div class="settings-item-icon">🛡️</div>
+                <div style="flex:1">
+                  <div>Autenticación de dos factores</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Añade seguridad extra a tu cuenta</div>
+                </div>
+                <span class="settings-badge settings-badge-soon">Pronto</span>
+              </div>
+              <div class="settings-item">
+                <div class="settings-item-icon">📱</div>
+                <span>Sesiones activas</span>
+                <span style="margin-left:auto;font-size:0.85rem;color:var(--primary);font-weight:600">1 dispositivo</span>
+              </div>
+              <div class="settings-item" id="settings-logout-btn">
+                <div class="settings-item-icon" style="color:var(--danger)">🚪</div>
+                <span style="color:var(--danger)">Cerrar sesión</span>
+                <svg style="margin-left:auto;color:var(--danger)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
             </div>
           </div>
 
-          <div class="settings-section">
-            <div class="settings-section-title">Avanzado</div>
-            <div class="settings-item" id="settings-delete-account-btn">
-              <div class="settings-item-icon" style="color:var(--danger)">⛔</div>
-              <span style="color:var(--danger)">Eliminar cuenta permanentemente</span>
+          <!-- ── Appearance ── -->
+          <div class="settings-section-panel" id="settings-panel-appearance">
+            <div class="settings-section">
+              <div class="settings-section-title">Tema</div>
+              <div class="settings-theme-picker" id="settings-theme-picker">
+                <div class="theme-option active" data-theme="dark">
+                  <div class="theme-preview theme-preview-dark"></div>
+                  <span>Oscuro</span>
+                </div>
+                <div class="theme-option" data-theme="darker">
+                  <div class="theme-preview theme-preview-darker"></div>
+                  <span>Negro</span>
+                </div>
+                <div class="theme-option" data-theme="forest">
+                  <div class="theme-preview theme-preview-forest"></div>
+                  <span>Bosque</span>
+                </div>
+                <div class="theme-option" data-theme="ocean">
+                  <div class="theme-preview theme-preview-ocean"></div>
+                  <span>Océano</span>
+                </div>
+                <div class="theme-option" data-theme="sunset">
+                  <div class="theme-preview theme-preview-sunset"></div>
+                  <span>Atardecer</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Color de acento</div>
+              <div class="settings-accent-picker" id="settings-accent-picker">
+                <div class="accent-swatch active" data-accent="#4ADE80" style="background:#4ADE80" title="Verde"></div>
+                <div class="accent-swatch" data-accent="#60A5FA" style="background:#60A5FA" title="Azul"></div>
+                <div class="accent-swatch" data-accent="#F472B6" style="background:#F472B6" title="Rosa"></div>
+                <div class="accent-swatch" data-accent="#A78BFA" style="background:#A78BFA" title="Morado"></div>
+                <div class="accent-swatch" data-accent="#FBBF24" style="background:#FBBF24" title="Amarillo"></div>
+                <div class="accent-swatch" data-accent="#F87171" style="background:#F87171" title="Rojo"></div>
+                <div class="accent-swatch" data-accent="#34D399" style="background:#34D399" title="Esmeralda"></div>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Efectos de sonido</div>
+              <div class="settings-item">
+                <div class="settings-item-icon">🔊</div>
+                <div style="flex:1">
+                  <div>Sonidos de UI</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Clicks, notificaciones y reacciones</div>
+                </div>
+                <div class="toggle-switch on settings-pref-toggle" id="sfx-toggle" data-key="sfx"></div>
+              </div>
+              <div class="settings-item">
+                <div class="settings-item-icon">💬</div>
+                <div style="flex:1">
+                  <div>Sonido de mensajes</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Al recibir un mensaje</div>
+                </div>
+                <div class="toggle-switch on settings-pref-toggle" id="msg-sound-toggle" data-key="msgSound"></div>
+              </div>
+              <div class="settings-item">
+                <div class="settings-item-icon">✨</div>
+                <div style="flex:1">
+                  <div>Animaciones reducidas</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Simplifica las transiciones</div>
+                </div>
+                <div class="toggle-switch settings-pref-toggle" id="reduce-motion-toggle" data-key="reduceMotion"></div>
+              </div>
             </div>
           </div>
+
+          <!-- ── Privacy ── -->
+          <div class="settings-section-panel" id="settings-panel-privacy">
+            <div class="settings-section">
+              <div class="settings-section-title">Visibilidad de perfil</div>
+              <div class="settings-item">
+                <div class="settings-item-icon">🌐</div>
+                <div style="flex:1">
+                  <div>Perfil público</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Cualquiera puede ver tu perfil</div>
+                </div>
+                <div class="toggle-switch on settings-privacy-toggle" data-key="publicProfile"></div>
+              </div>
+              <div class="settings-item">
+                <div class="settings-item-icon">🟢</div>
+                <div style="flex:1">
+                  <div>Mostrar estado "En línea"</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Otros podrán ver cuando estés conectado</div>
+                </div>
+                <div class="toggle-switch on settings-privacy-toggle" data-key="onlineStatus"></div>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Mensajes y actividad</div>
+              <div class="settings-item">
+                <div class="settings-item-icon">✅</div>
+                <div style="flex:1">
+                  <div>Confirmaciones de lectura</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Muestra palomitas azules al leer mensajes</div>
+                </div>
+                <div class="toggle-switch on settings-privacy-toggle" data-key="readReceipts"></div>
+              </div>
+              <div class="settings-item">
+                <div class="settings-item-icon">💌</div>
+                <div style="flex:1">
+                  <div>Mensajes de desconocidos</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Permitir que te escriban personas que no sigues</div>
+                </div>
+                <div class="toggle-switch on settings-privacy-toggle" data-key="allowDMs"></div>
+              </div>
+              <div class="settings-item">
+                <div class="settings-item-icon">❤️</div>
+                <div style="flex:1">
+                  <div>Mostrar mis likes</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Otros pueden ver las publicaciones que te gustan</div>
+                </div>
+                <div class="toggle-switch settings-privacy-toggle" data-key="showLikes"></div>
+              </div>
+              <div class="settings-item">
+                <div class="settings-item-icon">📊</div>
+                <div style="flex:1">
+                  <div>Estadísticas de actividad</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Permite ver cuándo estuviste activo por última vez</div>
+                </div>
+                <div class="toggle-switch on settings-privacy-toggle" data-key="activityStatus"></div>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Bloqueos y restricciones</div>
+              <div class="settings-item" id="settings-blocked-users">
+                <div class="settings-item-icon">🚫</div>
+                <span>Usuarios bloqueados</span>
+                <span style="margin-left:auto;font-size:0.85rem;color:var(--text-muted)" id="blocked-count">0</span>
+                <svg style="color:var(--text-muted);margin-left:8px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Notifications ── -->
+          <div class="settings-section-panel" id="settings-panel-notifications">
+            <div class="settings-section">
+              <div class="settings-section-title">Notificaciones push</div>
+              <div class="settings-item">
+                <div class="settings-item-icon">🔔</div>
+                <div style="flex:1">
+                  <div>Notificaciones activadas</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Notificaciones del navegador</div>
+                </div>
+                <div class="toggle-switch settings-pref-toggle" id="notif-toggle" data-key="notifications"></div>
+              </div>
+              <div id="notif-enable-btn" class="settings-item" style="cursor:pointer;background:var(--primary-glow2);border:1px solid var(--border-strong);border-radius:var(--radius-md);margin-top:8px;display:none">
+                <div class="settings-item-icon">📳</div>
+                <div style="flex:1">
+                  <div style="color:var(--primary);font-weight:600">Activar notificaciones del sistema</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Haz clic para permitir notificaciones del navegador</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Qué recibes</div>
+              <div class="settings-item">
+                <div class="settings-item-icon">💬</div>
+                <div style="flex:1">
+                  <div>Nuevos mensajes</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Cuando alguien te escribe</div>
+                </div>
+                <div class="toggle-switch on settings-pref-toggle" data-key="notifMessages"></div>
+              </div>
+              <div class="settings-item">
+                <div class="settings-item-icon">❤️</div>
+                <div style="flex:1">
+                  <div>Likes en publicaciones</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Cuando a alguien le gusta un post tuyo</div>
+                </div>
+                <div class="toggle-switch on settings-pref-toggle" data-key="notifLikes"></div>
+              </div>
+              <div class="settings-item">
+                <div class="settings-item-icon">👥</div>
+                <div style="flex:1">
+                  <div>Nuevos seguidores</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Cuando alguien empieza a seguirte</div>
+                </div>
+                <div class="toggle-switch on settings-pref-toggle" data-key="notifFollowers"></div>
+              </div>
+              <div class="settings-item">
+                <div class="settings-item-icon">💭</div>
+                <div style="flex:1">
+                  <div>Comentarios</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Respuestas a tus publicaciones</div>
+                </div>
+                <div class="toggle-switch on settings-pref-toggle" data-key="notifComments"></div>
+              </div>
+              <div class="settings-item">
+                <div class="settings-item-icon">📖</div>
+                <div style="flex:1">
+                  <div>Notas y estados</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Cuando tus contactos actualizan su nota</div>
+                </div>
+                <div class="toggle-switch settings-pref-toggle" data-key="notifNotes"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Accessibility ── -->
+          <div class="settings-section-panel" id="settings-panel-accessibility">
+            <div class="settings-section">
+              <div class="settings-section-title">Tamaño de fuente</div>
+              <div style="padding:12px 0">
+                <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+                  <span style="font-size:0.8rem;color:var(--text-muted)">A</span>
+                  <span style="font-size:1.1rem;color:var(--primary);font-weight:700" id="font-size-display">100%</span>
+                  <span style="font-size:1.1rem;color:var(--text-muted)">A</span>
+                </div>
+                <input type="range" id="settings-font-size" min="80" max="130" value="100" step="5" style="width:100%;accent-color:var(--primary)">
+                <div style="display:flex;justify-content:space-between;margin-top:6px">
+                  <span style="font-size:0.75rem;color:var(--text-muted)">Pequeño</span>
+                  <span style="font-size:0.75rem;color:var(--text-muted)">Normal</span>
+                  <span style="font-size:0.75rem;color:var(--text-muted)">Grande</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Comodidad visual</div>
+              <div class="settings-item">
+                <div class="settings-item-icon">🌙</div>
+                <div style="flex:1">
+                  <div>Animaciones suavizadas</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Activa transiciones más suaves</div>
+                </div>
+                <div class="toggle-switch on settings-pref-toggle" data-key="smoothAnimations"></div>
+              </div>
+              <div class="settings-item">
+                <div class="settings-item-icon">👁️</div>
+                <div style="flex:1">
+                  <div>Alto contraste</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Mejora la legibilidad del texto</div>
+                </div>
+                <div class="toggle-switch settings-pref-toggle" id="high-contrast-toggle" data-key="highContrast"></div>
+              </div>
+              <div class="settings-item">
+                <div class="settings-item-icon">🔆</div>
+                <div style="flex:1">
+                  <div>Modo neón reducido</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Quita los efectos de luz degradados</div>
+                </div>
+                <div class="toggle-switch settings-pref-toggle" id="reduced-neon-toggle" data-key="reducedNeon"></div>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Idioma</div>
+              <div class="settings-item">
+                <div class="settings-item-icon">🌍</div>
+                <span>Idioma de la app</span>
+                <select class="input" style="margin-left:auto;width:auto;padding:6px 12px;background:var(--bg-input)" id="lang-select">
+                  <option value="es">Español</option>
+                  <option value="en">English</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Danger Zone ── -->
+          <div class="settings-section-panel" id="settings-panel-danger">
+            <div class="settings-section">
+              <div class="settings-section-title" style="color:var(--danger)">⚠️ Acciones irreversibles</div>
+              
+              <div class="settings-item danger-item" id="settings-clear-cache-btn">
+                <div class="settings-item-icon" style="color:var(--warning)">🗑️</div>
+                <div style="flex:1">
+                  <div>Limpiar caché local</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Elimina datos temporales de esta sesión</div>
+                </div>
+                <svg style="color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+
+              <div class="settings-item danger-item" id="settings-reset-prefs-btn">
+                <div class="settings-item-icon" style="color:var(--warning)">🔄</div>
+                <div style="flex:1">
+                  <div>Restablecer preferencias</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Vuelve a la configuración predeterminada</div>
+                </div>
+                <svg style="color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+
+              <div style="height:1px;background:rgba(248,113,113,0.2);margin:16px 0"></div>
+
+              <div class="settings-item danger-item danger-critical" id="settings-delete-account-btn">
+                <div class="settings-item-icon" style="color:var(--danger)">⛔</div>
+                <div style="flex:1">
+                  <div style="color:var(--danger);font-weight:600">Eliminar cuenta permanentemente</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Esta acción no se puede deshacer</div>
+                </div>
+                <svg style="color:var(--danger)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <div class="settings-section-title">Versión de la app</div>
+              <div class="settings-item settings-item-info">
+                <div class="settings-item-icon">📦</div>
+                <div style="flex:1">
+                  <div>Zamora MSG</div>
+                  <div style="font-size:0.8rem;color:var(--text-muted)">Versión 1.0.0 · Firebase 12.x</div>
+                </div>
+                <span class="settings-badge" style="background:var(--primary-glow2);color:var(--primary);border:1px solid var(--border-strong)">Estable</span>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
+
+
 
     </main>
   </div>

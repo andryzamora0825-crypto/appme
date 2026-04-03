@@ -11,6 +11,72 @@
   gap: var(--space-lg);
 }
 
+/* ── Settings Container ── */
+.settings-container { max-width: 660px; margin: 0 auto; padding: var(--space-lg); display: flex; flex-direction: column; gap: var(--space-lg); }
+.settings-header { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--text-primary); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+/* ── Profile Card ── */
+.settings-card-name  { font-weight: 700; font-size: 1rem; }
+.settings-card-sub   { font-size: 0.82rem; color: var(--text-muted); }
+.settings-avatar-badge { width: 12px; height: 12px; background: var(--primary); border-radius: 50%; border: 2px solid var(--bg-main); position: absolute; bottom: 2px; right: 2px; box-shadow: 0 0 6px rgba(74,222,128,0.6); }
+.settings-profile-card { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: var(--radius-xl); padding: var(--space-lg); position: relative; overflow: hidden; }
+.settings-profile-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gradient); }
+
+/* ── Tabs ── */
+.settings-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; flex-wrap: wrap; }
+.settings-tabs::-webkit-scrollbar { display: none; }
+.settings-tab {
+  padding: 7px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  transition: all var(--transition-fast);
+  background: var(--bg-card);
+}
+.settings-tab:hover { color: var(--primary); border-color: var(--border-strong); }
+.settings-tab.active { background: var(--primary); color: #051505; border-color: var(--primary); box-shadow: 0 0 12px rgba(74,222,128,0.3); }
+
+/* ── Section Panels ── */
+.settings-section-panel { display: none; flex-direction: column; gap: var(--space-md); }
+.settings-section-panel.active { display: flex; }
+
+/* ── Badge ── */
+.settings-badge { font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-full); letter-spacing: 0.5px; }
+.settings-badge-soon { background: rgba(251,191,36,0.15); color: var(--warning); border: 1px solid rgba(251,191,36,0.3); }
+
+/* ── Danger Items ── */
+.danger-item { transition: all var(--transition-fast); }
+.danger-item:hover { background: rgba(248,113,113,0.06) !important; }
+.danger-critical:hover { background: rgba(248,113,113,0.12) !important; }
+
+/* ── Theme Picker ── */
+.settings-theme-picker { display: flex; gap: 12px; flex-wrap: wrap; padding: 8px 0; }
+.theme-option { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+.theme-option span { font-size: 0.78rem; color: var(--text-muted); transition: color var(--transition-fast); }
+.theme-option.active span { color: var(--primary); font-weight: 700; }
+.theme-preview { width: 64px; height: 44px; border-radius: var(--radius-md); border: 2px solid var(--border); transition: all var(--transition-fast); }
+.theme-option.active .theme-preview { border-color: var(--primary); box-shadow: 0 0 10px rgba(74,222,128,0.4); }
+.theme-option:hover .theme-preview { transform: scale(1.05); }
+.theme-preview-dark    { background: linear-gradient(135deg, #020402, #0a1a0a); }
+.theme-preview-darker  { background: linear-gradient(135deg, #000, #0a0a0a); }
+.theme-preview-forest  { background: linear-gradient(135deg, #0f2d0f, #1a4a1a); }
+.theme-preview-ocean   { background: linear-gradient(135deg, #0a1628, #0e3460); }
+.theme-preview-sunset  { background: linear-gradient(135deg, #2d0a1a, #4a1a2a); }
+
+/* ── Accent Picker ── */
+.settings-accent-picker { display: flex; gap: 10px; padding: 8px 0; flex-wrap: wrap; }
+.accent-swatch { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; transition: all var(--transition-fast); border: 2px solid transparent; }
+.accent-swatch:hover { transform: scale(1.15); }
+.accent-swatch.active { border-color: #fff; box-shadow: 0 0 0 2px currentColor, 0 0 10px rgba(255,255,255,0.3); transform: scale(1.1); }
+
+/* ── Status dot standalone ── */
+.status-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 6px rgba(74,222,128,0.6); flex-shrink: 0; }
+
+
 /* ── Settings Section ── */
 .settings-section {
   background: var(--bg-card);
