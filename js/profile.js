@@ -63,6 +63,33 @@ async function renderProfile(uid, isOwn) {
   setText('profile-posts-count',     u.postsCount     || 0);
   setText('profile-followers-count', u.followersCount || 0);
   setText('profile-following-count', u.followingCount || 0);
+  
+  // Meta Info
+  const metaContainer = document.getElementById('profile-meta-container');
+  if (metaContainer) {
+    let hasMeta = false;
+    if (u.location) {
+      document.getElementById('meta-location').style.display = 'flex';
+      setText('profile-location', u.location);
+      hasMeta = true;
+    } else { document.getElementById('meta-location').style.display = 'none'; }
+    
+    if (u.website) {
+      const webEl = document.getElementById('profile-website');
+      const webItem = document.getElementById('meta-website');
+      webItem.style.display = 'flex';
+      webEl.href = u.website.startsWith('http') ? u.website : 'https://' + u.website;
+      webEl.textContent = u.website.replace(/^https?:\/\//, '');
+      hasMeta = true;
+    } else { document.getElementById('meta-website').style.display = 'none'; }
+    
+    // Join Date
+    const joinedStr = u.createdAt ? timeAgo(u.createdAt) : 'recientemente';
+    setText('profile-joined', 'Se unió ' + joinedStr);
+    hasMeta = true; // Always show joined
+    
+    metaContainer.style.display = hasMeta ? 'flex' : 'none';
+  }
 
   // Note
   const noteWrap = document.getElementById('profile-note-wrap');
