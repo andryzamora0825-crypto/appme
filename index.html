@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Zamora MSG</title>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/feed.css">
+  <link rel="stylesheet" href="css/stories.css">
+  <link rel="stylesheet" href="css/messages.css">
+  <link rel="stylesheet" href="css/profile.css">
+  <link rel="stylesheet" href="css/stickers.css">
+  <link rel="stylesheet" href="css/notes.css">
+  <link rel="stylesheet" href="css/settings.css">
+</head>
+<body>
+
+  <!-- SPLASH SCREEN -->
+  <div id="splash-screen">
+    <div class="splash-logo">
+      <div class="splash-logo-icon">Z</div>
+      <div class="splash-logo-name">Zamora MSG</div>
+      <div class="splash-logo-tagline">Conectando tu mundo</div>
+    </div>
+    <div class="splash-loader">
+      <div class="splash-bar"><div class="splash-bar-fill" id="splash-bar-fill"></div></div>
+    </div>
+    <div class="splash-version">v1.0.0</div>
+  </div>
+
+  <!-- AUTH PAGE -->
+  <div id="auth-page" class="page">
+    <div class="auth-grid"></div>
+    <div class="auth-container">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">Z</div>
+        <div class="auth-logo-name">Zamora MSG</div>
+        <div class="auth-logo-sub">Inicia sesión para continuar</div>
+      </div>
+
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <div class="auth-tab active" id="login-tab">Iniciar Sesión</div>
+          <div class="auth-tab" id="register-tab">Registrarse</div>
+        </div>
+
+        <div id="auth-error" class="auth-error hidden"></div>
+        <div id="auth-success" class="auth-success hidden"></div>
+
+        <!-- LOGIN FORM -->
+        <form id="login-form" class="auth-form">
+          <div class="input-group">
+            <label class="input-label">Correo electrónico</label>
+            <div class="input-icon-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <input type="email" id="login-email" class="input" placeholder="tu@correo.com" required>
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Contraseña</label>
+            <div class="input-icon-wrap password-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="login-password" class="input" placeholder="••••••••" required>
+              <div class="password-toggle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="auth-form-extras">
+            <label class="checkbox-wrap">
+              <input type="checkbox" id="login-remember" checked>
+              <div class="checkbox-box"><svg class="checkbox-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <span class="checkbox-label">Recordarme</span>
+            </label>
+            <span class="auth-link" id="forgot-link">¿Olvidaste tu contraseña?</span>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full auth-btn" id="login-btn"><span>Iniciar Sesión →</span></button>
+          
+          <div class="divider"><span class="divider-text">O continúa con</span></div>
+          <button type="button" class="btn btn-google btn-full" id="google-login-btn">
+            <svg viewBox="0 0 24 24"><path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0112 4.909c1.69 0 3.218.6 4.408 1.583l3.242-3.24C17.653 1.346 15.034.33 12 .33 7.373.33 3.338 3.016 1.157 6.942l4.109 2.823z"/><path fill="#34A853" d="M16.036 19.349A7.054 7.054 0 0112 21.09c-3.13 0-5.836-2.023-6.734-4.836l-4.109 2.822C3.338 22.984 7.373 25.67 12 25.67c3.313 0 6.273-1.125 8.528-3.056l-4.492-3.265z"/><path fill="#4A90E2" d="M25.345 12.302c0-.915-.09-1.802-.249-2.658H12v5.033h7.5A6.9 6.9 0 0117.65 18.06l4.492 3.265A13.435 13.435 0 0025.345 12.3z"/><path fill="#FBBC05" d="M5.267 16.254a7.086 7.086 0 010-4.488L1.157 8.943a13.386 13.386 0 000 8.131l4.11-2.82z"/></svg>
+            Google
+          </button>
+        </form>
+
+        <!-- REGISTER FORM -->
+        <form id="register-form" class="auth-form hidden">
+          <div class="avatar-upload-wrap">
+            <input type="file" id="register-avatar-input" accept="image/*" class="hidden">
+            <div class="avatar-upload-btn" onclick="document.getElementById('register-avatar-input').click()">
+              <img id="register-avatar-preview" class="avatar-upload-preview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E">
+              <div class="avatar-upload-icon">+</div>
+            </div>
+            <span class="avatar-upload-label">Añadir foto</span>
+          </div>
+
+          <div class="input-group">
+            <div class="input-icon-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input type="text" id="reg-name" class="input" placeholder="Nombre completo" required>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-icon-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <input type="email" id="reg-email" class="input" placeholder="tu@correo.com" required>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-icon-wrap password-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="reg-password" class="input" placeholder="Contraseña" required>
+              <div class="password-toggle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </div>
+            </div>
+            <div id="reg-strength" style="display:flex;flex-direction:column;gap:2px;margin-top:2px">
+              <div style="display:flex;gap:4px">
+                <div class="strength-bar"></div><div class="strength-bar"></div><div class="strength-bar"></div>
+              </div>
+              <div id="reg-strength-label" class="strength-label"></div>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-icon-wrap password-wrap">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="reg-confirm" class="input" placeholder="Confirmar contraseña" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full auth-btn" id="register-btn"><span>Crear Cuenta →</span></button>
+          
+          <div class="divider"><span class="divider-text">O regístrate con</span></div>
+          <button type="button" class="btn btn-google btn-full" id="google-register-btn">
+            <svg viewBox="0 0 24 24"><path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0112 4.909c1.69 0 3.218.6 4.408 1.583l3.242-3.24C17.653 1.346 15.034.33 12 .33 7.373.33 3.338 3.016 1.157 6.942l4.109 2.823z"/><path fill="#34A853" d="M16.036 19.349A7.054 7.054 0 0112 21.09c-3.13 0-5.836-2.023-6.734-4.836l-4.109 2.822C3.338 22.984 7.373 25.67 12 25.67c3.313 0 6.273-1.125 8.528-3.056l-4.492-3.265z"/><path fill="#4A90E2" d="M25.345 12.302c0-.915-.09-1.802-.249-2.658H12v5.033h7.5A6.9 6.9 0 0117.65 18.06l4.492 3.265A13.435 13.435 0 0025.345 12.3z"/><path fill="#FBBC05" d="M5.267 16.254a7.086 7.086 0 010-4.488L1.157 8.943a13.386 13.386 0 000 8.131l4.11-2.82z"/></svg>
+            Google
+          </button>
+
+          <div class="auth-terms">
+            Al registrarte confirmas que aceptas nuestros <span class="auth-link">Términos</span> y <span class="auth-link">Política de privacidad</span>.
+          </div>
+        </form>
+
+        <!-- FORGOT PASSWORD -->
+        <form id="forgot-form" class="auth-form" style="display:none;">
+          <div id="forgot-panel" class="active">
+            <h3 style="font-family:'Outfit';font-size:1.4rem;text-align:center">Recuperar cuenta</h3>
+            <p style="color:var(--text-muted);font-size:0.9rem;text-align:center">Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña.</p>
+            <div class="input-group">
+              <div class="input-icon-wrap">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <input type="email" id="forgot-email" class="input" placeholder="tu@correo.com" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full" id="forgot-btn">📧 Enviar correo</button>
+            <div id="forgot-success" class="auth-success hidden">Revisa tu bandeja de entrada o la carpeta de spam.</div>
+            <div style="text-align:center">
+              <span class="back-link" id="forgot-back">← Volver al login</span>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+<!-- APP SHELL -->
+  <div id="app" class="app-layout" style="display:none;">
+    
+    <!-- SIDEBAR (Desktop) -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-icon">Z</div>
+        <div class="sidebar-logo-name" style="text-shadow:0 0 10px rgba(74,222,128,0.4)">Zamora MSG</div>
+      </div>
+      
+      <div class="sidebar-search-wrap" style="padding:16px; position:relative; z-index:50;">
+        <div class="input-icon-wrap">
+          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="global-search-input" class="input" placeholder="Buscar amigos..." style="border-radius:24px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1)">
+        </div>
+        <div id="global-search-results" class="search-results-dropdown hidden" style="position:absolute; top:60px; left:16px; right:16px; background:var(--bg-card); border:1px solid var(--border-strong); border-radius:12px; max-height:300px; overflow-y:auto; box-shadow:var(--shadow-lg);"></div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Principal</div>
+        <div class="nav-item active" data-page="feed">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Inicio
+          <div class="nav-item-indicator"></div>
+        </div>
+        <div class="nav-item" data-page="messages">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Mensajes
+          <div class="nav-item-indicator"></div>
+        </div>
+        <div class="nav-item" data-page="notes">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Notas
+          <div class="nav-item-indicator"></div>
+        </div>
+        
+        <div class="nav-section-title" style="margin-top:16px">Crear</div>
+        <div class="nav-item" data-page="stickers">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          Stickers
+          <div class="nav-item-indicator"></div>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user" data-page="profile">
+          <div class="sidebar-user-avatar-wrap">
+            <img id="sidebar-user-avatar" class="avatar avatar-md" style="display:none;" alt="">
+            <div id="sidebar-user-initial" class="avatar avatar-md avatar-placeholder">?</div>
+            <div class="sidebar-user-status"></div>
+          </div>
+          <div class="sidebar-user-info">
+            <div id="sidebar-user-name" class="sidebar-user-name">Usuario</div>
+            <div id="sidebar-user-handle" class="sidebar-user-handle">@usuario</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MOBILE TOP BAR -->
+    <header class="top-bar">
+      <div class="top-bar-logo">Zamora MSG</div>
+      <div class="top-bar-actions">
+        <div class="top-bar-btn" data-page="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+      </div>
+    </header>
+
+    <!-- MOBILE BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <div class="bottom-nav-items">
+        <div class="bottom-nav-item active" data-page="feed">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div class="bottom-nav-item" data-page="notes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <div class="bottom-nav-item" data-page="stickers" style="margin-top:-15px">
+          <div class="bottom-nav-fab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          </div>
+        </div>
+        <div class="bottom-nav-item" data-page="messages">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="bottom-nav-item" data-page="profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+      </div>
+    </nav>
+
+    <!-- FAB DESKTOP -->
+    <div class="fab" data-page="stickers" title="Crear Sticker">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+      <!-- FEED PAGE -->
+      <section id="feed-page" class="page">
+        <div class="stories-bar" id="stories-list"></div>
+        <div class="create-post-bar" id="create-post-trigger">
+          <div class="avatar avatar-sm avatar-placeholder" style="margin-right:12px">?</div>
+          <div class="create-post-input-mock">¿Qué estás pensando?</div>
+          <div class="create-post-actions">
+            <div class="create-post-action" id="create-post-photo-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+            <div class="create-post-action" id="create-post-sticker-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+          </div>
+        </div>
+        <div class="feed-layout">
+          <div class="feed-posts-column" id="feed-posts"></div>
+          <div class="feed-sidebar-column">
+            <div class="suggested-users-widget">
+              <h4 style="margin-bottom:12px;font-family:'Outfit';color:var(--text-primary)">Sugerencias para ti</h4>
+              <div id="suggested-users-list"></div>
+            </div>
+            <div class="trending-widget" style="margin-top:20px">
+              <h4 style="margin-bottom:12px;font-family:'Outfit';color:var(--text-primary)">Tendencias</h4>
+              <div style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:8px">#ZamoraMSG</div>
+              <div style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:8px">#NuevosStickers</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MESSAGES PAGE -->
+      <section id="messages-page" class="page">
+        <div class="messages-layout">
+          <!-- Chat list -->
+          <div class="chat-list-panel">
+            <div class="chat-list-header">
+              <h2 style="font-family:'Outfit'">Mensajes</h2>
+              <div class="new-chat-btn" id="new-chat-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+            </div>
+            
+            <!-- Online friends widget -->
+            <div class="online-friends-widget" style="padding:12px 16px; border-bottom:1px solid var(--border);">
+              <h4 style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase;">Amigos en línea</h4>
+              <div id="online-friends-list" style="display:flex; gap:12px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none;">
+                <!-- Online avatars injected via JS -->
+              </div>
+            </div>
+
+            <div class="chat-list" id="chat-list"></div>
+          </div>
+          <!-- Window -->
+          <div class="chat-window">
+            <div class="chat-window-empty" id="chat-empty-state">
+              <div style="font-size:4rem;margin-bottom:16px">💬</div>
+              <h3>Tus mensajes</h3>
+              <p style="color:var(--text-muted);margin-top:8px">Selecciona un chat o inicia uno nuevo</p>
+            </div>
+            <div class="chat-window-content hidden" id="chat-content">
+              <div class="chat-header">
+                <div class="chat-back-btn" id="chat-back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+                <img id="chat-partner-avatar" class="avatar avatar-sm" style="display:none;" alt="">
+                <div class="chat-header-info">
+                  <div class="chat-header-name" id="chat-partner-name">Usuario</div>
+                  <div class="chat-header-status" id="chat-partner-status"></div>
+                </div>
+              </div>
+              <div class="messages-area" id="messages-area"></div>
+              <div class="chat-input-area">
+                <div class="chat-input-actions">
+                  <input type="file" id="chat-image-input" accept="image/*" class="hidden">
+                  <div class="chat-action-btn" id="chat-image-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+                  <div class="chat-action-btn" id="chat-sticker-btn" style="position:relative;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                    <!-- Sticker popup -->
+                    <div class="sticker-picker-popup hidden" id="sticker-picker-popup">
+                      <div class="sticker-picker-header">Elige un sticker</div>
+                      <div class="sticker-picker-grid" id="sticker-picker-grid"></div>
+                    </div>
+                  </div>
+                  <label class="view-once-pill" id="chat-view-once-toggle" title="Enviar foto para ver una sola vez">
+                    <span style="font-size:0.8rem">👁️ 1</span>
+                  </label>
+                </div>
+                <textarea class="chat-input" id="chat-text-input" placeholder="Escribe un mensaje..." rows="1"></textarea>
+                <div class="chat-send-btn" id="chat-send-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NOTES PAGE -->
+      <section id="notes-page" class="page">
+        <div class="notes-container">
+          <div class="notes-header">
+            <h2>Notas</h2>
+            <p>Comparte un pensamiento rápido con tus amigos (desaparece en 24h).</p>
+          </div>
+          <div class="notes-feed-grid" id="notes-feed-grid"></div>
+          
+          <div class="your-note-section">
+            <div id="your-current-note" class="hidden" style="text-align:center">
+              <div class="note-bubble-wrap" style="position:relative;margin:0 auto">
+                <div class="note-bubble">
+                  <span class="note-bubble-emoji" id="your-note-display-emoji"></span>
+                  <span id="your-note-display-text"></span>
+                </div>
+              </div>
+              <p style="color:var(--text-secondary);font-size:0.85rem;margin-top:16px" id="your-note-expires"></p>
+              <div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
+                <button class="btn btn-secondary btn-sm" id="edit-note-btn">Cambiar</button>
+                <button class="btn btn-danger btn-sm" id="delete-note-btn">Eliminar</button>
+              </div>
+            </div>
+
+            <div id="your-note-editor" class="hidden">
+              <h3 style="margin-bottom:16px;text-align:center">Nueva nota</h3>
+              <div class="note-editor">
+                <div class="note-emoji-picker" id="note-emoji-picker-btn">
+                  <span id="note-emoji-selected">💬</span>
+                  <div class="note-emoji-popup hidden" id="note-emoji-popup"></div>
+                </div>
+                <textarea class="note-input" id="note-textarea" placeholder="Comparte algo..." draggable="false"></textarea>
+                <div class="note-char-count" id="note-char-count">0/60</div>
+              </div>
+              <button class="btn btn-primary btn-full" id="save-note-btn" style="margin-top:16px">📝 Publicar Nota</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- PROFILE PAGE -->
+      <section id="profile-page" class="page">
+        <div class="profile-header">
+          <div class="profile-cover-wrap">
+            <img id="profile-cover" class="profile-cover hidden" alt="portada">
+            <div id="profile-cover-placeholder" class="profile-cover-placeholder"></div>
+            <div class="profile-cover-edit" id="profile-cover-edit-btn" style="display:none;" title="Cambiar portada">📷</div>
+            <input type="file" id="cover-upload-input" accept="image/*" class="hidden">
+          </div>
+          <div class="profile-info-container">
+            <div class="profile-avatar-row">
+              <div class="profile-avatar-wrap">
+                <img id="profile-avatar" class="profile-avatar" style="display:none;" alt="">
+                <div id="profile-avatar-initial" class="profile-avatar avatar-placeholder" style="display:flex;align-items:center;justify-content:center;font-size:3rem">?</div>
+                <div class="profile-avatar-edit" id="profile-avatar-edit" style="display:none;" title="Cambiar foto">📷</div>
+                <input type="file" id="avatar-upload-input" accept="image/*" class="hidden">
+              </div>
+              <div class="profile-actions" id="profile-actions"></div>
+            </div>
+            <div class="profile-name" id="profile-name"></div>
+            <div class="profile-username" id="profile-username"></div>
+            <div class="profile-bio" id="profile-bio"></div>
+            <div class="profile-stats">
+              <div class="profile-stat-box">
+                <div class="profile-stat-val" id="profile-posts-count">0</div>
+                <div class="profile-stat-label">Posts</div>
+              </div>
+              <div class="profile-stat-box">
+                <div class="profile-stat-val" id="profile-followers-count">0</div>
+                <div class="profile-stat-label">Seguidores</div>
+              </div>
+              <div class="profile-stat-box">
+                <div class="profile-stat-val" id="profile-following-count">0</div>
+                <div class="profile-stat-label">Seguidos</div>
+              </div>
+            </div>
+            <div id="profile-note-wrap" class="hidden" style="margin-top:16px;display:inline-block">
+              <div class="note-bubble"><span class="note-bubble-emoji" id="profile-note-emoji"></span><span id="profile-note-text"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="profile-tabs-bar">
+          <div class="profile-tab active" data-tab="posts">Publicaciones</div>
+          <div class="profile-tab" data-tab="stickers">Stickers</div>
+          <div class="profile-tab" data-tab="photos">Fotos</div>
+          <div class="profile-tab" data-tab="about">Información</div>
+        </div>
+        <div class="profile-content" id="profile-tab-content"></div>
+      </section>
+
+      <!-- STICKERS PAGE -->
+      <section id="stickers-page" class="page">
+        <div class="stickers-layout">
+          <div class="sticker-creator-panel">
+            <h2 style="font-family:'Outfit';margin-bottom:16px">Creador de Stickers</h2>
+            
+            <div class="sticker-canvas-container">
+              <canvas id="sticker-canvas"></canvas>
+            </div>
+
+            <div class="sticker-tools">
+              <div class="input-group">
+                <label>Texto del sticker</label>
+                <input type="text" id="sticker-text-input" class="input" placeholder="Escribe algo...">
+              </div>
+              
+              <div class="tool-section">
+                <label>Color</label>
+                <div class="sticker-color-picker">
+                  <div class="sticker-color-swatch active" data-color="#4ADE80" style="background:#4ADE80"></div>
+                  <div class="sticker-color-swatch" data-color="#22C55E" style="background:#22C55E"></div>
+                  <div class="sticker-color-swatch" data-color="#F87171" style="background:#F87171"></div>
+                  <div class="sticker-color-swatch" data-color="#60A5FA" style="background:#60A5FA"></div>
+                  <div class="sticker-color-swatch" data-color="#FBBF24" style="background:#FBBF24"></div>
+                  <div class="sticker-color-swatch" data-color="#A78BFA" style="background:#A78BFA"></div>
+                  <div class="sticker-color-swatch" data-color="#F472B6" style="background:#F472B6"></div>
+                  <div class="sticker-color-swatch" data-color="#FFFFFF" style="background:#FFFFFF"></div>
+                  <div class="sticker-color-swatch" data-color="#1A1A1A" style="background:#1A1A1A;border:1px solid #333"></div>
+                </div>
+              </div>
+
+              <div class="tool-section">
+                <label>Fondo</label>
+                <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">
+                  <div class="sticker-bg-option active" data-type="transparent">Transparente</div>
+                  <div class="sticker-bg-option" data-type="gradient" data-gradient="linear-gradient(135deg,#4ADE80,#22C55E)" style="background:linear-gradient(135deg,#4ADE80,#22C55E)"></div>
+                  <div class="sticker-bg-option" data-type="gradient" data-gradient="linear-gradient(135deg,#3730A3,#7C3AED)" style="background:linear-gradient(135deg,#3730A3,#7C3AED)"></div>
+                  <div class="sticker-bg-option" data-type="gradient" data-gradient="linear-gradient(135deg,#BE185D,#F472B6)" style="background:linear-gradient(135deg,#BE185D,#F472B6)"></div>
+                  <div class="sticker-bg-option" data-type="gradient" data-gradient="linear-gradient(135deg,#1a1a1a,#0a1a0a)" style="background:linear-gradient(135deg,#1a1a1a,#0a1a0a)"></div>
+                </div>
+              </div>
+
+              <div class="tool-section">
+                <label>Tipografía</label>
+                <div style="display:flex;gap:8px">
+                  <select id="sticker-font-select" class="input" style="flex:1">
+                    <option value="Outfit, sans-serif">Outfit</option>
+                    <option value="Inter, sans-serif">Inter</option>
+                    <option value="Impact, sans-serif">Impact</option>
+                    <option value="Courier New, monospace">Mono</option>
+                    <option value="Brush Script MT, cursive">Cursiva</option>
+                  </select>
+                  <label class="sticker-style-btn active" id="sticker-bold" title="Negrita">B</label>
+                  <label class="sticker-style-btn" id="sticker-italic" title="Cursiva">I</label>
+                  <label class="sticker-style-btn" id="sticker-shadow" title="Sombra">S</label>
+                </div>
+              </div>
+
+              <div class="tool-section">
+                <label>Tamaño <span id="font-size-val">42</span>px</label>
+                <input type="range" id="sticker-font-size" min="20" max="150" value="42" style="width:100%">
+              </div>
+
+              <div class="tool-section">
+                <label>Emoji principal</label>
+                <div class="sticker-emoji-bar">
+                  <div class="sticker-emoji-btn">😂</div><div class="sticker-emoji-btn">🔥</div>
+                  <div class="sticker-emoji-btn">❤️</div><div class="sticker-emoji-btn">👀</div>
+                  <div class="sticker-emoji-btn">💀</div><div class="sticker-emoji-btn">✨</div>
+                  <div class="sticker-emoji-btn">🌿</div><div class="sticker-emoji-btn">😎</div>
+                </div>
+              </div>
+
+              <div class="input-group" style="margin-top:16px">
+                <input type="text" id="sticker-name-input" class="input" placeholder="Nombre (ej. Buen día)">
+              </div>
+
+              <div style="display:flex;gap:8px;margin-top:16px">
+                <button class="btn btn-secondary" id="canvas-clear-btn" style="flex:1">Limpiar</button>
+                <button class="btn btn-primary" id="canvas-save-btn" style="flex:2">💾 Guardar Sticker</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="sticker-gallery-panel">
+            <h2 style="font-family:'Outfit';margin-bottom:16px">Galería de Comunidad</h2>
+            <div class="sticker-gallery-grid" id="sticker-gallery-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- UPLOAD STORY PAGE -->
+      <section id="upload-story-page" class="page">
+        <div class="container" style="max-width:500px;margin:0 auto;padding-top:40px">
+          <h2 style="font-family:'Outfit';text-align:center;margin-bottom:24px">Sube tu estado</h2>
+          <div class="story-upload-dropzone" id="story-drop-zone">
+            <div style="font-size:3rem;margin-bottom:12px">📸</div>
+            <h3>Haz clic o arrastra tu foto aquí</h3>
+            <p style="color:var(--text-muted);font-size:0.9rem;margin-top:8px">Soporta JPG, PNG (Max 20MB)</p>
+          </div>
+          <input type="file" id="story-file-input" accept="image/*" class="hidden">
+          
+          <div id="story-preview-container" style="display:none;flex-direction:column;gap:16px">
+            <img id="story-preview" class="story-upload-preview" alt="Preview">
+            
+            <div class="view-once-toggle-row">
+              <div style="flex:1">
+                <div style="font-weight:600;display:flex;align-items:center;gap:6px">👁️ Ver una sola vez</div>
+                <div style="font-size:0.85rem;color:var(--text-muted)">La foto se destruirá tras ser vista</div>
+              </div>
+              <div class="toggle-switch" id="story-view-once-toggle"></div>
+            </div>
+
+            <button class="btn btn-primary btn-full" id="publish-story-btn">Publicar Estado</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS PAGE -->
+      <section id="settings-page" class="page">
+        <div class="settings-container">
+          <div class="settings-header">Configuración</div>
+          
+          <div class="settings-profile-card">
+            <div style="display:flex;align-items:center;gap:16px">
+              <img id="settings-avatar" class="avatar avatar-lg" style="display:none" alt="">
+              <div class="avatar avatar-lg avatar-placeholder" id="settings-initial">?</div>
+              <div>
+                <div class="settings-card-name" id="settings-profile-name"></div>
+                <div class="settings-card-sub" id="settings-profile-email"></div>
+                <div class="settings-card-sub" id="settings-profile-handle" style="margin-top:4px"></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:16px">
+              <button class="btn btn-primary btn-sm" id="settings-go-profile">Ver perfil</button>
+              <button class="btn btn-secondary btn-sm" id="settings-go-edit">Editar Perfil</button>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-title">Seguridad y Cuenta</div>
+            <div class="settings-item" onclick="document.getElementById('change-password-modal').classList.remove('hidden')">
+              <div class="settings-item-icon">🔒</div><span>Cambiar contraseña</span>
+            </div>
+            <div class="settings-item">
+              <div class="settings-item-icon">📱</div><span>Dispositivos activos</span>
+              <span style="margin-left:auto;font-size:0.85rem;color:var(--text-muted)">1 dispositivo</span>
+            </div>
+            <div class="settings-item" id="settings-logout-btn">
+              <div class="settings-item-icon" style="color:var(--danger)">🚪</div>
+              <span style="color:var(--danger)">Cerrar sesión</span>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-title">Privacidad</div>
+            <div class="settings-item">
+              <div style="flex:1">
+                <div>Mostrar estado "En línea"</div>
+                <div style="font-size:0.8rem;color:var(--text-muted)">Otros podrán ver cuando estés conectado</div>
+              </div>
+              <div class="toggle-switch on settings-privacy-toggle" data-key="onlineStatus"></div>
+            </div>
+            <div class="settings-item">
+              <div style="flex:1">
+                <div>Confirmaciones de lectura</div>
+                <div style="font-size:0.8rem;color:var(--text-muted)">Otros verán cuando hayas leído sus mensajes</div>
+              </div>
+              <div class="toggle-switch on settings-privacy-toggle" data-key="readReceipts"></div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-title">Avanzado</div>
+            <div class="settings-item" id="settings-delete-account-btn">
+              <div class="settings-item-icon" style="color:var(--danger)">⛔</div>
+              <span style="color:var(--danger)">Eliminar cuenta permanentemente</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- GLOBALS MODALS & OVERLAYS -->
+  
+  <!-- Create Post Modal -->
+  <div class="modal-backdrop hidden" id="create-post-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" style="font-family:'Outfit'">Crear publicación</h3>
+        <div class="modal-close" onclick="closeModal('create-post-modal')">✕</div>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex;gap:12px;margin-bottom:16px">
+          <div class="avatar avatar-sm avatar-placeholder">US</div>
+          <div style="flex:1">
+            <div style="font-weight:600">tú</div>
+          </div>
+        </div>
+        <textarea id="post-text" class="input" placeholder="¿Qué estás pensando?" rows="4" style="border:none;background:transparent;padding:0;resize:none;font-size:1.1rem;box-shadow:none"></textarea>
+        
+        <div class="hidden" style="margin-top:12px;position:relative">
+          <img id="post-image-preview" style="width:100%;border-radius:var(--radius-md);max-height:300px;object-fit:cover">
+          <button id="remove-post-image" class="btn btn-secondary" style="position:absolute;top:8px;right:8px;padding:4px 8px;background:rgba(0,0,0,0.6);border:none;color:#fff">✕</button>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding:12px;border:1px solid var(--border-light);border-radius:var(--radius-md)">
+          <span style="font-weight:500;font-size:0.95rem">Añadir a tu post</span>
+          <div style="display:flex;gap:8px">
+            <div class="create-post-action" id="create-post-media-btn" title="Foto" style="padding:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+            <input type="file" id="post-image-input" accept="image/*" class="hidden">
+          </div>
+        </div>
+        
+        <label class="checkbox-wrap" style="margin-top:16px;background:var(--bg-card);padding:12px;border-radius:var(--radius-md)">
+          <input type="checkbox" id="post-view-once">
+          <div class="checkbox-box"><svg class="checkbox-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span class="checkbox-label" style="display:flex;flex-direction:column;gap:2px">
+            <span style="font-weight:600">👁️ Imagen de ver una sola vez</span>
+            <span style="font-size:0.8rem;color:var(--text-muted)">Si adjuntas una foto, los demás solo podrán verla una vez y se autodestruirá.</span>
+          </span>
+        </label>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary btn-full" id="publish-post-btn">Publicar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Story Viewer Overlay -->
+  <div id="story-viewer" class="story-viewer hidden">
+    <div class="story-progress-wrap" id="story-progress-wrap"></div>
+    <div class="story-header" style="z-index:50">
+      <div class="story-header-user">
+        <img id="story-author-avatar" class="avatar avatar-sm">
+        <div style="display:flex;flex-direction:column;gap:2px;text-shadow:0 1px 3px rgba(0,0,0,0.8)">
+          <span id="story-author-name" style="font-weight:600"></span>
+          <span id="story-author-time" style="font-size:0.8rem;opacity:0.8"></span>
+        </div>
+      </div>
+      <div class="story-close" id="story-viewer-close">✕</div>
+    </div>
+    
+    <div class="story-content" id="story-media-wrap"></div>
+    
+    <!-- View once overlay for story -->
+    <div class="view-once-overlay hidden" id="view-once-overlay" style="z-index:45">
+      <span style="font-size:3rem">👁️</span>
+      <h3>Ver una sola vez</h3>
+      <p style="color:var(--text-muted);text-align:center;max-width:250px">Esta historia contiene contenido efímero que se destruirá al cerrarla.</p>
+      <button class="btn btn-primary" id="reveal-view-once-btn" style="margin-top:16px">Tocar para ver</button>
+    </div>
+
+    <div class="story-tap-zone story-tap-prev" id="story-tap-prev"></div>
+    <div class="story-tap-zone story-tap-next" id="story-tap-next"></div>
+
+    <div class="story-footer" style="padding:16px 20px;z-index:50;display:flex;gap:12px;background:linear-gradient(transparent, rgba(0,0,0,0.8))">
+      <input type="text" id="story-reply-input" class="input" placeholder="Responder a esta historia..." style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff">
+      <button class="btn btn-primary" style="padding:0 16px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Note Detail Modal -->
+  <div class="modal-backdrop hidden" id="note-detail-modal">
+    <div class="modal-box" style="background:transparent;box-shadow:none">
+      <div style="display:flex;flex-direction:column;align-items:center;padding:24px">
+        <div class="note-bubble-wrap" style="position:relative;margin-bottom:20px;transform:scale(1.2)">
+          <div class="note-bubble">
+            <span class="note-bubble-emoji" id="note-detail-emoji"></span>
+            <span id="note-detail-text"></span>
+          </div>
+        </div>
+        <img id="note-detail-avatar" class="avatar avatar-lg" style="margin-bottom:12px">
+        <div style="font-weight:600;font-size:1.2rem" id="note-detail-name"></div>
+        <div style="color:rgba(255,255,255,0.7);font-size:0.9rem;margin-top:4px" id="note-detail-time"></div>
+        
+        <div style="width:100%;margin-top:24px;display:flex;gap:8px">
+          <input type="text" id="note-reply-text" class="input" placeholder="Responder a la nota...">
+          <button class="btn btn-primary" id="note-reply-send">Enviar</button>
+        </div>
+        <button class="btn btn-secondary btn-full" style="margin-top:12px" onclick="closeModal('note-detail-modal')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div class="modal-backdrop hidden" id="edit-profile-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" style="font-family:'Outfit'">Editar Perfil</h3>
+        <div class="modal-close" onclick="closeModal('edit-profile-modal')">✕</div>
+      </div>
+      <div class="modal-body" style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;justify-content:center;margin-bottom:8px">
+          <div style="position:relative">
+            <img id="edit-avatar-preview" class="avatar avatar-lg">
+            <div id="edit-avatar-btn" style="position:absolute;bottom:0;right:0;background:var(--primary);color:#000;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid var(--bg-card)">📷</div>
+            <input type="file" id="edit-avatar-input" accept="image/*" class="hidden">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Nombre</label>
+          <input type="text" id="edit-name" class="input">
+        </div>
+        <div class="input-group">
+          <label>Usuario</label>
+          <div class="input-icon-wrap">
+            <span style="position:absolute;left:14px;color:var(--text-muted)">@</span>
+            <input type="text" id="edit-username" class="input" style="padding-left:32px">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Biografía</label>
+          <textarea id="edit-bio" class="input" rows="3" placeholder="Cuéntanos sobre ti..."></textarea>
+        </div>
+        <div style="display:flex;gap:12px">
+          <div class="input-group" style="flex:1">
+            <label>Ubicación</label>
+            <input type="text" id="edit-location" class="input" placeholder="Ej. Ciudad de México">
+          </div>
+          <div class="input-group" style="flex:1">
+            <label>Sitio web</label>
+            <input type="url" id="edit-website" class="input" placeholder="https://...">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary btn-full" id="save-profile-btn">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Chat Modal -->
+  <div class="modal-backdrop hidden" id="new-chat-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" style="font-family:'Outfit'">Nuevo Mensaje</h3>
+        <div class="modal-close" onclick="document.getElementById('new-chat-modal').classList.add('hidden')">✕</div>
+      </div>
+      <div class="modal-body" style="padding:0">
+        <div style="padding:16px;border-bottom:1px solid var(--border-light)">
+          <div class="input-icon-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="new-chat-search" class="input" placeholder="Buscar usuarios...">
+          </div>
+        </div>
+        <div id="new-chat-user-list" style="max-height:300px;overflow-y:auto;padding:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal-backdrop hidden" id="change-password-modal">
+    <div class="modal-box" style="max-width:400px">
+      <div class="modal-header">
+        <h3 class="modal-title" style="font-family:'Outfit'">Cambiar Contraseña</h3>
+        <div class="modal-close" onclick="document.getElementById('change-password-modal').classList.add('hidden');document.getElementById('change-password-form').reset()">✕</div>
+      </div>
+      <form id="change-password-form">
+        <div class="modal-body">
+          <div class="input-group">
+            <label>Contraseña actual</label>
+            <input type="password" id="current-password-input" class="input" required>
+          </div>
+          <div class="input-group" style="margin-top:16px">
+            <label>Nueva contraseña</label>
+            <input type="password" id="new-password-input" class="input" required>
+            <div id="settings-strength" style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+              <div style="display:flex;gap:4px">
+                <div class="strength-bar"></div><div class="strength-bar"></div><div class="strength-bar"></div>
+              </div>
+              <div id="settings-strength-label" class="strength-label"></div>
+            </div>
+          </div>
+          <div class="input-group" style="margin-top:16px">
+            <label>Confirmar nueva contraseña</label>
+            <input type="password" id="confirm-password-input" class="input" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary btn-full" id="change-password-btn">🔒 Cambiar Contraseña</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Account Modal -->
+  <div class="modal-backdrop hidden" id="delete-account-modal">
+    <div class="modal-box" style="max-width:400px;border:1px solid rgba(239,68,68,0.3)">
+      <div class="modal-header">
+        <h3 class="modal-title" style="font-family:'Outfit';color:var(--danger)"> Eliminar cuenta permanentemente</h3>
+        <div class="modal-close" onclick="document.getElementById('delete-account-modal').classList.add('hidden')">✕</div>
+      </div>
+      <div class="modal-body">
+        <p style="color:var(--text-secondary);font-size:0.95rem;margin-bottom:16px;line-height:1.5">
+          Esta acción <strong>no se puede deshacer</strong>. Todas tus publicaciones, fotos, mensajes y datos serán eliminados permanentemente.
+        </p>
+        <div class="input-group">
+          <label>Para confirmar, escribe "ELIMINAR"</label>
+          <input type="text" id="delete-confirm-text" class="input" placeholder="ELIMINAR" autocomplete="off" style="border-color:rgba(239,68,68,0.5)">
+        </div>
+        <div class="input-group" style="margin-top:16px">
+          <label>Ingresa tu contraseña</label>
+          <input type="password" id="delete-confirm-password" class="input" placeholder="••••••••">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-full" id="confirm-delete-account-btn">⛔ Eliminar cuenta permanentemente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUDIO SFX (Hidden) -->
+  <audio id="sfx-send" src="https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3" preload="auto"></audio>
+  <audio id="sfx-receive" src="https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3" preload="auto"></audio>
+  <audio id="sfx-like" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
+
+  <div id="toast-container"></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

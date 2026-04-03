@@ -1,0 +1,378 @@
+/* =====================================================
+   ZAMORA MSG — Stickers CSS
+   ===================================================== */
+
+/* ── Sticker Creator ── */
+.sticker-creator-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--space-xl);
+  padding: 40px var(--space-lg) var(--space-lg) var(--space-lg);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .sticker-creator-layout {
+    grid-template-columns: 1fr;
+  }
+  .sticker-preview-panel { order: -1; }
+}
+
+/* Canvas */
+.sticker-canvas-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.sticker-canvas-container {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 1;
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+  box-shadow: var(--shadow-md);
+}
+#sticker-canvas {
+  border-radius: var(--radius-lg);
+  max-width: 100%;
+  max-height: 100%;
+  cursor: crosshair;
+}
+
+/* Canvas checkerboard (transparent bg indicator) */
+.canvas-transparent-bg {
+  background-image:
+    linear-gradient(45deg, #1a1a1a 25%, transparent 25%),
+    linear-gradient(-45deg, #1a1a1a 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #1a1a1a 75%),
+    linear-gradient(-45deg, transparent 75%, #1a1a1a 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+/* ── Sticker Controls Panel ── */
+.sticker-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.control-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.control-section-header {
+  padding: 10px var(--space-md);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.control-section-header svg { width: 14px; height: 14px; color: var(--primary); }
+.control-section-body { padding: var(--space-md); display: flex; flex-direction: column; gap: 12px; }
+
+/* Color picker row */
+.color-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+.color-swatch {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+.color-swatch:hover   { transform: scale(1.15); border-color: rgba(255,255,255,0.5); }
+.color-swatch.active  { border-color: #fff; transform: scale(1.1); box-shadow: 0 0 0 2px var(--primary); }
+.color-custom-btn {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+.color-custom-btn:hover { transform: scale(1.15); border-color: rgba(255,255,255,0.5); }
+
+/* Font size range */
+.range-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.range-label { font-size: 0.8rem; color: var(--text-muted); min-width: 60px; }
+.range-value { font-size: 0.8rem; font-weight: 600; color: var(--primary); min-width: 30px; text-align: right; }
+input[type="range"] {
+  flex: 1;
+  appearance: none;
+  height: 4px;
+  background: var(--bg-surface);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--gradient);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(74,222,128,0.4);
+  transition: transform var(--transition-fast);
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+/* Text input */
+.sticker-text-input {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  width: 100%;
+  outline: none;
+  resize: none;
+  min-height: 60px;
+}
+.sticker-text-input:focus { border-color: var(--border-focus); }
+
+/* Emoji bar */
+.emoji-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.emoji-bar span {
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  line-height: 1;
+}
+.emoji-bar span:hover { background: var(--bg-hover); transform: scale(1.2); }
+
+/* Font family select */
+.font-select {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  width: 100%;
+  cursor: pointer;
+  appearance: none;
+  outline: none;
+}
+.font-select:focus { border-color: var(--border-focus); }
+
+/* Style buttons */
+.style-btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.style-btn {
+  padding: 6px 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex; align-items: center; gap: 4px;
+}
+.style-btn:hover  { color: var(--primary); border-color: var(--primary); }
+.style-btn.active { background: var(--primary-glow2); border-color: var(--primary); color: var(--primary); }
+
+/* Background options */
+.bg-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.bg-option {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all var(--transition-fast);
+}
+.bg-option:hover  { border-color: rgba(255,255,255,0.5); transform: scale(1.1); }
+.bg-option.active { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+.bg-transparent {
+  background-image:
+    linear-gradient(45deg, #333 25%, transparent 25%),
+    linear-gradient(-45deg, #333 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #333 75%),
+    linear-gradient(-45deg, transparent 75%, #333 75%);
+  background-size: 8px 8px;
+  background-color: #1a1a1a;
+}
+
+/* Canvas action buttons */
+.canvas-actions { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+.canvas-btn {
+  flex: 1;
+  min-width: 80px;
+  padding: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+}
+.canvas-btn:hover   { color: var(--primary); border-color: var(--primary); background: var(--primary-glow2); }
+.canvas-btn.primary { background: var(--gradient); color: #051505; border-color: transparent; }
+.canvas-btn.primary:hover { box-shadow: var(--shadow-glow); }
+.canvas-btn svg { width: 14px; height: 14px; }
+
+/* ── Sticker Name Input ── */
+.sticker-name-row {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+/* ── Sticker Gallery (Browse) ── */
+.sticker-browse-layout {
+  padding: var(--space-lg);
+}
+
+.sticker-browse-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+}
+.sticker-browse-search {
+  flex: 1;
+  min-width: 200px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 10px 18px 10px 40px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+.sticker-browse-search:focus { border-color: var(--border-focus); }
+
+.sticker-pack-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+  margin-bottom: var(--space-md);
+}
+.sticker-pack-tab {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.sticker-pack-tab:hover  { color: var(--primary); border-color: var(--primary); }
+.sticker-pack-tab.active { background: var(--primary-glow2); border-color: var(--primary); color: var(--primary); }
+
+.sticker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--space-md);
+}
+.sticker-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+}
+.sticker-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow);
+}
+.sticker-card-img {
+  aspect-ratio: 1;
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-sm);
+}
+.sticker-card-img img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+}
+.sticker-card-info {
+  padding: 6px 8px;
+  border-top: 1px solid var(--border);
+}
+.sticker-card-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sticker-card-author {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.sticker-card-actions {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-top: 1px solid var(--border);
+}
+.sticker-card-btn {
+  flex: 1;
+  padding: 4px;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--text-muted);
+}
+.sticker-card-btn:hover { background: var(--primary-glow2); color: var(--primary); }
