@@ -19,19 +19,6 @@
 </head>
 <body>
 
-  <!-- SPLASH SCREEN -->
-  <div id="splash-screen">
-    <div class="splash-logo">
-      <div class="splash-logo-icon">Z</div>
-      <div class="splash-logo-name">Zamora MSG</div>
-      <div class="splash-logo-tagline">Conectando tu mundo</div>
-    </div>
-    <div class="splash-loader">
-      <div class="splash-bar"><div class="splash-bar-fill" id="splash-bar-fill"></div></div>
-    </div>
-    <div class="splash-version">v1.0.0</div>
-  </div>
-
   <!-- AUTH PAGE -->
   <div id="auth-page" class="page">
     <div class="auth-grid"></div>
@@ -156,7 +143,7 @@
                 <input type="email" id="forgot-email" class="input" placeholder="tu@correo.com" required>
               </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-full" id="forgot-btn">📧 Enviar correo</button>
+            <button type="submit" class="btn btn-primary btn-full" id="forgot-btn">[✉] Enviar correo</button>
             <div id="forgot-success" class="auth-success hidden">Revisa tu bandeja de entrada o la carpeta de spam.</div>
             <div style="text-align:center">
               <span class="back-link" id="forgot-back">← Volver al login</span>
@@ -225,6 +212,7 @@
             <div id="sidebar-user-handle" class="sidebar-user-handle">@usuario</div>
           </div>
         </div>
+        <button class="btn btn-secondary btn-full" id="sidebar-logout-btn" onclick="logoutUser()" style="margin-top:12px">Cerrar sesión</button>
       </div>
     </aside>
 
@@ -232,8 +220,11 @@
     <header class="top-bar">
       <div class="top-bar-logo">Zamora MSG</div>
       <div class="top-bar-actions">
-        <div class="top-bar-btn" data-page="settings">
+        <div class="top-bar-btn" data-page="settings" title="Configuración">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <div class="top-bar-btn" id="topbar-logout-btn" title="Cerrar sesión" onclick="logoutUser()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         </div>
       </div>
     </header>
@@ -270,7 +261,6 @@
     <main class="main-content">
       <!-- FEED PAGE -->
       <section id="feed-page" class="page">
-        <div class="stories-bar" id="stories-list"></div>
         <div class="create-post-bar" id="create-post-trigger">
           <div class="avatar avatar-sm avatar-placeholder" style="margin-right:12px">?</div>
           <div class="create-post-input-mock">¿Qué estás pensando?</div>
@@ -281,17 +271,6 @@
         </div>
         <div class="feed-layout">
           <div class="feed-posts-column" id="feed-posts"></div>
-          <div class="feed-sidebar-column">
-            <div class="suggested-users-widget">
-              <h4 style="margin-bottom:12px;font-family:'Outfit';color:var(--text-primary)">Sugerencias para ti</h4>
-              <div id="suggested-users-list"></div>
-            </div>
-            <div class="trending-widget" style="margin-top:20px">
-              <h4 style="margin-bottom:12px;font-family:'Outfit';color:var(--text-primary)">Tendencias</h4>
-              <div style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:8px">#ZamoraMSG</div>
-              <div style="font-size:0.9rem;color:var(--text-secondary);margin-bottom:8px">#NuevosStickers</div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -304,6 +283,9 @@
               <h2 style="font-family:'Outfit'">Mensajes</h2>
               <div class="new-chat-btn" id="new-chat-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
             </div>
+            
+            <!-- Stories bar -->
+            <div class="stories-bar" id="stories-list"></div>
             
             <!-- Online friends widget -->
             <div class="online-friends-widget" style="padding:12px 16px; border-bottom:1px solid var(--border);">
@@ -318,7 +300,7 @@
           <!-- Window -->
           <div class="chat-window">
             <div class="chat-window-empty" id="chat-empty-state">
-              <div style="font-size:4rem;margin-bottom:16px">💬</div>
+              <div style="font-size:4rem;margin-bottom:16px">[msg]</div>
               <h3>Tus mensajes</h3>
               <p style="color:var(--text-muted);margin-top:8px">Selecciona un chat o inicia uno nuevo</p>
             </div>
@@ -345,7 +327,7 @@
                     </div>
                   </div>
                   <label class="view-once-pill" id="chat-view-once-toggle" title="Enviar foto para ver una sola vez">
-                    <span style="font-size:0.8rem">👁️ 1</span>
+                    <span style="font-size:0.8rem">[eye] 1</span>
                   </label>
                 </div>
                 <textarea class="chat-input" id="chat-text-input" placeholder="Escribe un mensaje..." rows="1"></textarea>
@@ -384,13 +366,13 @@
               <h3 style="margin-bottom:16px;text-align:center">Nueva nota</h3>
               <div class="note-editor">
                 <div class="note-emoji-picker" id="note-emoji-picker-btn">
-                  <span id="note-emoji-selected">💬</span>
+                  <span id="note-emoji-selected">[msg]</span>
                   <div class="note-emoji-popup hidden" id="note-emoji-popup"></div>
                 </div>
                 <textarea class="note-input" id="note-textarea" placeholder="Comparte algo..." draggable="false"></textarea>
                 <div class="note-char-count" id="note-char-count">0/60</div>
               </div>
-              <button class="btn btn-primary btn-full" id="save-note-btn" style="margin-top:16px">📝 Publicar Nota</button>
+              <button class="btn btn-primary btn-full" id="save-note-btn" style="margin-top:16px">[pen] Publicar Nota</button>
             </div>
           </div>
         </div>
@@ -401,7 +383,7 @@
           <div class="profile-cover-wrap">
             <img id="profile-cover" class="profile-cover hidden" alt="portada">
             <div id="profile-cover-placeholder" class="profile-cover-placeholder"></div>
-            <div class="profile-cover-edit" id="profile-cover-edit-btn" style="display:none;" title="Cambiar portada">📷</div>
+            <div class="profile-cover-edit" id="profile-cover-edit-btn" style="display:none;" title="Cambiar portada">[cam]</div>
             <input type="file" id="cover-upload-input" accept="image/*" class="hidden">
           </div>
           <div class="profile-info-wrap">
@@ -409,7 +391,7 @@
               <div class="profile-avatar-wrap">
                 <img id="profile-avatar" class="profile-avatar" style="display:none;" alt="">
                 <div id="profile-avatar-initial" class="profile-avatar avatar-placeholder" style="display:flex;align-items:center;justify-content:center;font-size:3rem">?</div>
-                <div class="profile-avatar-edit" id="profile-avatar-edit" style="display:none;" title="Cambiar foto">📷</div>
+                <div class="profile-avatar-edit" id="profile-avatar-edit" style="display:none;" title="Cambiar foto">[cam]</div>
                 <input type="file" id="avatar-upload-input" accept="image/*" class="hidden">
               </div>
               <div class="profile-actions" id="profile-actions"></div>
@@ -505,7 +487,7 @@
         <div class="container" style="max-width:500px;margin:0 auto;padding-top:40px">
           <h2 style="font-family:'Outfit';text-align:center;margin-bottom:24px">Sube tu estado</h2>
           <div class="story-upload-dropzone" id="story-drop-zone">
-            <div style="font-size:3rem;margin-bottom:12px">📸</div>
+            <div style="font-size:3rem;margin-bottom:12px">[cam]</div>
             <h3>Haz clic o arrastra tu foto aquí</h3>
             <p style="color:var(--text-muted);font-size:0.9rem;margin-top:8px">Soporta JPG, PNG (Max 20MB)</p>
           </div>
@@ -516,7 +498,7 @@
             
             <div class="view-once-toggle-row">
               <div style="flex:1">
-                <div style="font-weight:600;display:flex;align-items:center;gap:6px">👁️ Ver una sola vez</div>
+                <div style="font-weight:600;display:flex;align-items:center;gap:6px">[eye] Ver una sola vez</div>
                 <div style="font-size:0.85rem;color:var(--text-muted)">La foto se destruirá tras ser vista</div>
               </div>
               <div class="toggle-switch" id="story-view-once-toggle"></div>
@@ -558,12 +540,12 @@
 
           <!-- Settings Tabs -->
           <div class="settings-tabs" id="settings-tabs">
-            <div class="settings-tab active" data-section="account">🔑 Cuenta</div>
-            <div class="settings-tab" data-section="appearance">🎨 Apariencia</div>
-            <div class="settings-tab" data-section="privacy">🛡️ Privacidad</div>
-            <div class="settings-tab" data-section="notifications">🔔 Notificaciones</div>
-            <div class="settings-tab" data-section="accessibility">♿ Accesibilidad</div>
-            <div class="settings-tab" data-section="danger">⛔ Zona peligrosa</div>
+            <div class="settings-tab active" data-section="account">[key] Cuenta</div>
+            <div class="settings-tab" data-section="appearance">[art] Apariencia</div>
+            <div class="settings-tab" data-section="privacy">[shield] Privacidad</div>
+            <div class="settings-tab" data-section="notifications">[bell] Notificaciones</div>
+            <div class="settings-tab" data-section="accessibility">[A] Accesibilidad</div>
+            <div class="settings-tab" data-section="danger">[X] Zona peligrosa</div>
           </div>
 
           <!-- ── Account ── -->
@@ -571,21 +553,21 @@
             <div class="settings-section">
               <div class="settings-section-title">Información de cuenta</div>
               <div class="settings-item settings-item-info">
-                <div class="settings-item-icon">📧</div>
+                <div class="settings-item-icon">[✉]</div>
                 <div style="flex:1">
                   <div style="font-size:0.78rem;color:var(--text-muted)">Correo electrónico</div>
                   <div id="info-email" style="font-weight:600"></div>
                 </div>
               </div>
               <div class="settings-item settings-item-info">
-                <div class="settings-item-icon">👤</div>
+                <div class="settings-item-icon">[user]</div>
                 <div style="flex:1">
                   <div style="font-size:0.78rem;color:var(--text-muted)">Nombre de usuario</div>
                   <div id="info-username" style="font-weight:600"></div>
                 </div>
               </div>
               <div class="settings-item settings-item-info">
-                <div class="settings-item-icon">🗓️</div>
+                <div class="settings-item-icon">[cal]</div>
                 <div style="flex:1">
                   <div style="font-size:0.78rem;color:var(--text-muted)">Miembro desde</div>
                   <div id="info-joined" style="font-weight:600"></div>
@@ -596,12 +578,12 @@
             <div class="settings-section">
               <div class="settings-section-title">Seguridad</div>
               <div class="settings-item" onclick="document.getElementById('change-password-modal').classList.remove('hidden')">
-                <div class="settings-item-icon">🔒</div>
+                <div class="settings-item-icon">[L]</div>
                 <span>Cambiar contraseña</span>
                 <svg style="margin-left:auto;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>
               </div>
               <div class="settings-item" id="settings-2fa-item">
-                <div class="settings-item-icon">🛡️</div>
+                <div class="settings-item-icon">[shield]</div>
                 <div style="flex:1">
                   <div>Autenticación de dos factores</div>
                   <div style="font-size:0.8rem;color:var(--text-muted)">Añade seguridad extra a tu cuenta</div>
@@ -673,7 +655,7 @@
                 <div class="toggle-switch on settings-pref-toggle" id="sfx-toggle" data-key="sfx"></div>
               </div>
               <div class="settings-item">
-                <div class="settings-item-icon">💬</div>
+                <div class="settings-item-icon">[msg]</div>
                 <div style="flex:1">
                   <div>Sonido de mensajes</div>
                   <div style="font-size:0.8rem;color:var(--text-muted)">Al recibir un mensaje</div>
@@ -681,7 +663,7 @@
                 <div class="toggle-switch on settings-pref-toggle" id="msg-sound-toggle" data-key="msgSound"></div>
               </div>
               <div class="settings-item">
-                <div class="settings-item-icon">✨</div>
+                <div class="settings-item-icon">[*]</div>
                 <div style="flex:1">
                   <div>Animaciones reducidas</div>
                   <div style="font-size:0.8rem;color:var(--text-muted)">Simplifica las transiciones</div>
@@ -716,7 +698,7 @@
             <div class="settings-section">
               <div class="settings-section-title">Mensajes y actividad</div>
               <div class="settings-item">
-                <div class="settings-item-icon">✅</div>
+                <div class="settings-item-icon">[✓]</div>
                 <div style="flex:1">
                   <div>Confirmaciones de lectura</div>
                   <div style="font-size:0.8rem;color:var(--text-muted)">Muestra palomitas azules al leer mensajes</div>
@@ -724,7 +706,7 @@
                 <div class="toggle-switch on settings-privacy-toggle" data-key="readReceipts"></div>
               </div>
               <div class="settings-item">
-                <div class="settings-item-icon">💌</div>
+                <div class="settings-item-icon">[msg]</div>
                 <div style="flex:1">
                   <div>Mensajes de desconocidos</div>
                   <div style="font-size:0.8rem;color:var(--text-muted)">Permitir que te escriban personas que no sigues</div>
@@ -732,7 +714,7 @@
                 <div class="toggle-switch on settings-privacy-toggle" data-key="allowDMs"></div>
               </div>
               <div class="settings-item">
-                <div class="settings-item-icon">❤️</div>
+                <div class="settings-item-icon">[heart]</div>
                 <div style="flex:1">
                   <div>Mostrar mis likes</div>
                   <div style="font-size:0.8rem;color:var(--text-muted)">Otros pueden ver las publicaciones que te gustan</div>
@@ -784,7 +766,7 @@
             <div class="settings-section">
               <div class="settings-section-title">Qué recibes</div>
               <div class="settings-item">
-                <div class="settings-item-icon">💬</div>
+                <div class="settings-item-icon">[msg]</div>
                 <div style="flex:1">
                   <div>Nuevos mensajes</div>
                   <div style="font-size:0.8rem;color:var(--text-muted)">Cuando alguien te escribe</div>
@@ -792,7 +774,7 @@
                 <div class="toggle-switch on settings-pref-toggle" data-key="notifMessages"></div>
               </div>
               <div class="settings-item">
-                <div class="settings-item-icon">❤️</div>
+                <div class="settings-item-icon">[heart]</div>
                 <div style="flex:1">
                   <div>Likes en publicaciones</div>
                   <div style="font-size:0.8rem;color:var(--text-muted)">Cuando a alguien le gusta un post tuyo</div>
@@ -856,7 +838,7 @@
                 <div class="toggle-switch on settings-pref-toggle" data-key="smoothAnimations"></div>
               </div>
               <div class="settings-item">
-                <div class="settings-item-icon">👁️</div>
+                <div class="settings-item-icon">[eye]</div>
                 <div style="flex:1">
                   <div>Alto contraste</div>
                   <div style="font-size:0.8rem;color:var(--text-muted)">Mejora la legibilidad del texto</div>
@@ -889,10 +871,10 @@
           <!-- ── Danger Zone ── -->
           <div class="settings-section-panel" id="settings-panel-danger">
             <div class="settings-section">
-              <div class="settings-section-title" style="color:var(--danger)">⚠️ Acciones irreversibles</div>
+              <div class="settings-section-title" style="color:var(--danger)">[!] Acciones irreversibles</div>
               
               <div class="settings-item danger-item" id="settings-clear-cache-btn">
-                <div class="settings-item-icon" style="color:var(--warning)">🗑️</div>
+                <div class="settings-item-icon" style="color:var(--warning)">[X]</div>
                 <div style="flex:1">
                   <div>Limpiar caché local</div>
                   <div style="font-size:0.8rem;color:var(--text-muted)">Elimina datos temporales de esta sesión</div>
@@ -949,26 +931,32 @@
     <div class="modal-box">
       <div class="modal-header">
         <h3 class="modal-title" style="font-family:'Outfit'">Crear publicación</h3>
-        <div class="modal-close" onclick="closeModal('create-post-modal')">✕</div>
+        <div class="modal-close" onclick="closeModal('create-post-modal')">[×]</div>
       </div>
       <div class="modal-body">
-        <div style="display:flex;gap:12px;margin-bottom:16px">
-          <div class="avatar avatar-sm avatar-placeholder">US</div>
+        <div style="display:flex;gap:12px;margin-bottom:16px;align-items:center">
+          <div class="avatar avatar-sm avatar-placeholder" id="post-author-avatar">US</div>
           <div style="flex:1">
-            <div style="font-weight:600">tú</div>
+            <div style="font-weight:600" id="post-author-name">tú</div>
+            <select id="post-privacy" style="font-size:0.85rem;padding:4px 8px;border:1px solid var(--border-light);border-radius:4px;background:var(--bg-input);color:var(--text-primary);cursor:pointer">
+              <option value="public">Público</option>
+              <option value="friends">Solo amigos</option>
+              <option value="private">Solo yo</option>
+            </select>
           </div>
         </div>
         <textarea id="post-text" class="input" placeholder="¿Qué estás pensando?" rows="4" style="border:none;background:transparent;padding:0;resize:none;font-size:1.1rem;box-shadow:none"></textarea>
         
         <div class="hidden" style="margin-top:12px;position:relative">
           <img id="post-image-preview" style="width:100%;border-radius:var(--radius-md);max-height:300px;object-fit:cover">
-          <button id="remove-post-image" class="btn btn-secondary" style="position:absolute;top:8px;right:8px;padding:4px 8px;background:rgba(0,0,0,0.6);border:none;color:#fff">✕</button>
+          <button id="remove-post-image" class="btn btn-secondary" style="position:absolute;top:8px;right:8px;padding:4px 8px;background:rgba(0,0,0,0.6);border:none;color:#fff;cursor:pointer">[×]</button>
         </div>
 
         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding:12px;border:1px solid var(--border-light);border-radius:var(--radius-md)">
           <span style="font-weight:500;font-size:0.95rem">Añadir a tu post</span>
           <div style="display:flex;gap:8px">
-            <div class="create-post-action" id="create-post-media-btn" title="Foto" style="padding:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+            <div class="create-post-action" id="create-post-media-btn" title="Foto" style="padding:8px;cursor:pointer;border-radius:50%;transition:0.2s;display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+            <div class="create-post-action" id="create-post-smile-btn" title="Emoticono" style="padding:8px;cursor:pointer;border-radius:50%;transition:0.2s;display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
             <input type="file" id="post-image-input" accept="image/*" class="hidden">
           </div>
         </div>
@@ -977,14 +965,15 @@
           <input type="checkbox" id="post-view-once">
           <div class="checkbox-box"><svg class="checkbox-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
           <span class="checkbox-label" style="display:flex;flex-direction:column;gap:2px">
-            <span style="font-weight:600">👁️ Imagen de ver una sola vez</span>
+            <span style="font-weight:600">[eye] Imagen de ver una sola vez</span>
             <span style="font-size:0.8rem;color:var(--text-muted)">Si adjuntas una foto, los demás solo podrán verla una vez y se autodestruirá.</span>
           </span>
         </label>
 
       </div>
       <div class="modal-footer">
-        <button class="btn btn-primary btn-full" id="publish-post-btn">Publicar</button>
+        <button class="btn btn-secondary" onclick="closeModal('create-post-modal')">Cancelar</button>
+        <button class="btn btn-primary" id="publish-post-btn">Publicar</button>
       </div>
     </div>
   </div>
@@ -1000,14 +989,14 @@
           <span id="story-author-time" style="font-size:0.8rem;opacity:0.8"></span>
         </div>
       </div>
-      <div class="story-close" id="story-viewer-close">✕</div>
+      <div class="story-close" id="story-viewer-close">[×]</div>
     </div>
     
     <div class="story-content" id="story-media-wrap"></div>
     
     <!-- View once overlay for story -->
     <div class="view-once-overlay hidden" id="view-once-overlay" style="z-index:45">
-      <span style="font-size:3rem">👁️</span>
+      <span style="font-size:3rem">[eye]</span>
       <h3>Ver una sola vez</h3>
       <p style="color:var(--text-muted);text-align:center;max-width:250px">Esta historia contiene contenido efímero que se destruirá al cerrarla.</p>
       <button class="btn btn-primary" id="reveal-view-once-btn" style="margin-top:16px">Tocar para ver</button>
@@ -1050,13 +1039,13 @@
     <div class="modal-box">
       <div class="modal-header">
         <h3 class="modal-title" style="font-family:'Outfit'">Editar Perfil</h3>
-        <div class="modal-close" onclick="closeModal('edit-profile-modal')">✕</div>
+        <div class="modal-close" onclick="closeModal('edit-profile-modal')">[×]</div>
       </div>
       <div class="modal-body" style="display:flex;flex-direction:column;gap:16px">
         <div style="display:flex;justify-content:center;margin-bottom:8px">
           <div style="position:relative">
             <img id="edit-avatar-preview" class="avatar avatar-lg">
-            <div id="edit-avatar-btn" style="position:absolute;bottom:0;right:0;background:var(--primary);color:#000;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid var(--bg-card)">📷</div>
+            <div id="edit-avatar-btn" style="position:absolute;bottom:0;right:0;background:var(--primary);color:#000;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid var(--bg-card)">[cam]</div>
             <input type="file" id="edit-avatar-input" accept="image/*" class="hidden">
           </div>
         </div>
@@ -1097,7 +1086,7 @@
     <div class="modal-box">
       <div class="modal-header">
         <h3 class="modal-title" style="font-family:'Outfit'">Nuevo Mensaje</h3>
-        <div class="modal-close" onclick="document.getElementById('new-chat-modal').classList.add('hidden')">✕</div>
+        <div class="modal-close" onclick="document.getElementById('new-chat-modal').classList.add('hidden')">[×]</div>
       </div>
       <div class="modal-body" style="padding:0">
         <div style="padding:16px;border-bottom:1px solid var(--border-light)">
@@ -1116,7 +1105,7 @@
     <div class="modal-box" style="max-width:400px">
       <div class="modal-header">
         <h3 class="modal-title" style="font-family:'Outfit'">Cambiar Contraseña</h3>
-        <div class="modal-close" onclick="document.getElementById('change-password-modal').classList.add('hidden');document.getElementById('change-password-form').reset()">✕</div>
+        <div class="modal-close" onclick="document.getElementById('change-password-modal').classList.add('hidden');document.getElementById('change-password-form').reset()">[×]</div>
       </div>
       <form id="change-password-form">
         <div class="modal-body">
@@ -1140,7 +1129,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary btn-full" id="change-password-btn">🔒 Cambiar Contraseña</button>
+          <button type="submit" class="btn btn-primary btn-full" id="change-password-btn">[L] Cambiar Contraseña</button>
         </div>
       </form>
     </div>
@@ -1151,7 +1140,7 @@
     <div class="modal-box" style="max-width:400px;border:1px solid rgba(239,68,68,0.3)">
       <div class="modal-header">
         <h3 class="modal-title" style="font-family:'Outfit';color:var(--danger)"> Eliminar cuenta permanentemente</h3>
-        <div class="modal-close" onclick="document.getElementById('delete-account-modal').classList.add('hidden')">✕</div>
+        <div class="modal-close" onclick="document.getElementById('delete-account-modal').classList.add('hidden')">[×]</div>
       </div>
       <div class="modal-body">
         <p style="color:var(--text-secondary);font-size:0.95rem;margin-bottom:16px;line-height:1.5">

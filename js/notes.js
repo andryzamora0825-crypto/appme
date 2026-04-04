@@ -37,7 +37,7 @@ async function renderYourNote() {
     // Show existing note
     if (currentNoteWrap) currentNoteWrap.classList.remove('hidden');
     if (editorWrap)      editorWrap.classList.add('hidden');
-    if (noteEmoji)       noteEmoji.textContent = u.noteEmoji || '💬';
+    if (noteEmoji)       noteEmoji.textContent = u.noteEmoji || '[msg]';
     if (noteText)        noteText.textContent  = u.noteText;
     if (noteExpires)     noteExpires.textContent = expiresIn(u.noteUpdatedAt, 24);
   } else {
@@ -62,7 +62,7 @@ function setupNoteEditor() {
   const editBtn   = document.getElementById('edit-note-btn');
 
   // Emoji picker button
-  const emojis = ['💬','😊','😂','🔥','💚','👀','✨','🤔','😎','💪','🎵','🌿','⚡','🫶','🙃'];
+  const emojis = ['[msg]','[smile]','[laugh]','[fire]','[heart]','[eye]','[*]','[think]','[cool]','[strong]','[music]','[leaf]','[bolt]','[hug]','[happy]'];
   const emojiBtn = document.getElementById('note-emoji-picker-btn');
   const emojiPopup = document.getElementById('note-emoji-popup');
 
@@ -108,7 +108,7 @@ async function saveNote() {
   const user = getCurrentUser();
   if (!user) { showToast('Inicia sesión', 'info'); return; }
   const text  = document.getElementById('note-textarea')?.value.trim();
-  const emoji = document.getElementById('note-emoji-selected')?.textContent || '💬';
+  const emoji = document.getElementById('note-emoji-selected')?.textContent || '[msg]';
   const btn   = document.getElementById('save-note-btn');
 
   if (!text) { showToast('Escribe algo en tu nota', 'warning'); return; }
@@ -119,12 +119,12 @@ async function saveNote() {
       noteEmoji:    emoji,
       noteUpdatedAt: serverTimestamp()
     });
-    showToast('Nota publicada 📝', 'success');
+    showToast('Nota publicada [pen]', 'success');
     await renderYourNote();
   } catch(e) {
     showToast('Error al guardar nota', 'error');
   } finally {
-    btn.disabled = false; btn.textContent = '📝 Publicar Nota';
+    btn.disabled = false; btn.textContent = '[pen] Publicar Nota';
   }
 }
 
@@ -142,10 +142,10 @@ async function deleteNote() {
 async function loadFollowingNotes() {
   const container = document.getElementById('notes-feed-grid');
   if (!container) return;
-  container.innerHTML = '<div class="flex-center" style="padding:20px"><div class="spinner spinner-sm"></div></div>';
+  container.innerHTML = '';
 
   try {
-    const snap = await getDocs(query(collection(db, 'users'), limit(30)));
+    const snap = await getDocs(query(collection(db, 'users'), limit(12)));
     const user = getCurrentUser();
     const users = snap.docs.map(d => ({ uid: d.id, ...d.data() }))
       .filter(u => u.uid !== user?.uid && u.noteText && !isExpired(u.noteUpdatedAt, 24));
@@ -153,7 +153,7 @@ async function loadFollowingNotes() {
     if (!users.length) {
       container.innerHTML = `
         <div class="notes-empty">
-          <div class="icon">📝</div>
+          <div class="icon">[pen]</div>
           <p>Las personas que sigues aún no han compartido notas.</p>
         </div>`;
       return;
@@ -163,7 +163,7 @@ async function loadFollowingNotes() {
       <div class="note-person-item" onclick="window.openNoteDetail('${u.uid}')">
         <div class="note-bubble-wrap">
           <div class="note-bubble">
-            <span class="note-bubble-emoji">${u.noteEmoji || '💬'}</span>
+            <span class="note-bubble-emoji">${u.noteEmoji || '[msg]'}</span>
             ${u.noteText.substring(0, MAX_NOTE_CHARS)}
           </div>
         </div>
@@ -197,7 +197,7 @@ window.openNoteDetail = async (uid) => {
     else              avatarEl.style.display = 'none';
   }
   if (nameEl) nameEl.textContent  = u.displayName || 'Usuario';
-  if (emojiEl) emojiEl.textContent = u.noteEmoji || '💬';
+  if (emojiEl) emojiEl.textContent = u.noteEmoji || '[msg]';
   if (textEl) textEl.textContent   = u.noteText || '';
   if (timeEl) timeEl.textContent   = expiresIn(u.noteUpdatedAt, 24);
 

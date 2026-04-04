@@ -4,7 +4,7 @@
 
 import { auth }           from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-import { initAuthUI }     from './auth.js';
+import { initAuthUI, logout }     from './auth.js';
 import { router, initRouter } from './router.js';
 import { initFeed, loadStories } from './feed.js';
 import { initMessages }   from './messages.js';
@@ -17,27 +17,13 @@ import { showToast, getAvatarHTML }      from './ui.js';
 import { db } from './firebase-config.js';
 import { collection, query, where, getDocs, limit, orderBy } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-// ── Splash Screen ──
-const splash    = document.getElementById('splash-screen');
-const splashBar = document.getElementById('splash-bar-fill');
-
-// Animate splash bar
-setTimeout(() => { if (splashBar) splashBar.style.width = '70%'; }, 200);
-setTimeout(() => { if (splashBar) splashBar.style.width = '90%'; }, 1200);
-
 // ── Auth State Observer ──
 onAuthStateChanged(auth, (user) => {
-  // Mark splash as complete
-  setTimeout(() => { if (splashBar) splashBar.style.width = '100%'; }, 300);
-
-  setTimeout(() => {
-    splash?.classList.add('fade-out');
-    if (user) {
-      showApp(user);
-    } else {
-      showAuthPage();
-    }
-  }, 600);
+  if (user) {
+    showApp(user);
+  } else {
+    showAuthPage();
+  }
 });
 
 function showAuthPage() {
@@ -47,6 +33,16 @@ function showAuthPage() {
   if (appEl)    { appEl.style.display = 'none'; appEl.classList.remove('active'); }
   initAuthUI();
 }
+
+window.logoutUser = async () => {
+  try {
+    await logout();
+    showToast('Sesión cerrada. ¡Hasta pronto!', 'info');
+  } catch (err) {
+    console.error('logoutUser error:', err);
+    showToast('No se pudo cerrar sesión', 'error');
+  }
+};
 
 function showApp(user) {
   const authPage = document.getElementById('auth-page');

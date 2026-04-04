@@ -6,7 +6,7 @@
 const toastContainer = document.getElementById('toast-container');
 
 export function showToast(message, type = 'info', duration = 3500) {
-  const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+  const icons = { success: '[✓]', error: '[✕]', info: '[i]', warning: '[!]' };
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
   toast.innerHTML = `<span class="toast-icon">${icons[type] || icons.info}</span><span>${message}</span>`;
@@ -55,7 +55,9 @@ export function createModal({ id, title, content, footer = '', size = 'default' 
 }
 
 // Global helper for inline onclick
+window.openModal = openModal;
 window.closeModalById = closeModal;
+window.closeModal = closeModal;  // Alias para facilitar uso en HTML
 
 // Close on backdrop click
 document.addEventListener('click', (e) => {
@@ -86,20 +88,6 @@ export function setButtonLoading(btn, loading, originalText = '') {
     btn.classList.remove('btn-loading');
     btn.disabled = false;
   }
-}
-
-export function showPageLoader(container) {
-  const loader = document.createElement('div');
-  loader.className = 'page-loader';
-  loader.innerHTML = `<div class="spinner spinner-lg"></div>`;
-  loader.id = 'page-loader-temp';
-  container.style.position = 'relative';
-  container.appendChild(loader);
-  return loader;
-}
-export function hidePageLoader() {
-  const l = document.getElementById('page-loader-temp');
-  if (l) l.remove();
 }
 
 /* ── Confirm Dialog ── */

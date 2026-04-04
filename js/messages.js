@@ -14,6 +14,7 @@ import { timeAgo, validateImageFile, compressImage, generateId, readFileAsDataUR
 import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-storage.js";
 import { storage } from './firebase-config.js';
 import { loadStickerPicker } from './stickers.js';
+import { loadStories } from './feed.js';
 
 let activeChat     = null;
 let msgListener    = null;
@@ -25,6 +26,7 @@ export function initMessages() {
   isMobile = window.innerWidth < 768;
   loadChatList();
   loadOnlineFriends();
+  loadStories();
   setupChatInput();
   setupStickerPicker();
 
@@ -89,8 +91,8 @@ window.promptNoteStatus = async () => {
         title: 'Crear publicación',
         content: `
           <div style="display:flex; flex-direction:column; gap:12px; padding: 12px 0;">
-            <button class="btn btn-primary" onclick="window.submitIgNote()">💬 Dejar una Nota (Burbuja)</button>
-            <button class="btn btn-secondary" onclick="window.closeModalById('${modalId}'); window.openUploadStory()">📸 Subir Estado de 24h</button>
+            <button class="btn btn-primary" onclick="window.submitIgNote()">[msg] Dejar una Nota (Burbuja)</button>
+            <button class="btn btn-secondary" onclick="window.closeModalById('${modalId}'); window.openUploadStory()">[cam] Subir Estado de 24h</button>
           </div>
         `,
         size: 'sm'
@@ -120,7 +122,7 @@ async function loadChatList() {
   const listEl = document.getElementById('chat-list');
   if (!listEl) return;
 
-  listEl.innerHTML = '<div class="flex-center" style="padding:24px"><div class="spinner"></div></div>';
+  listEl.innerHTML = '';
 
   const q = query(
     collection(db, 'chats'),
@@ -132,7 +134,7 @@ async function loadChatList() {
   if (chatListSub) chatListSub();
   chatListSub = onSnapshot(q, async (snap) => {
     if (snap.empty) {
-      listEl.innerHTML = `<div class="empty-state" style="padding:32px"><div style="font-size:3rem">💬</div><p style="color:var(--text-muted);font-size:0.88rem;text-align:center;margin-top:8px">Sin conversaciones.<br>¡Inicia una nueva!</p></div>`;
+      listEl.innerHTML = `<div class="empty-state" style="padding:32px"><div style="font-size:3rem">[msg]</div><p style="color:var(--text-muted);font-size:0.88rem;text-align:center;margin-top:8px">Sin conversaciones.<br>¡Inicia una nueva!</p></div>`;
       return;
     }
     const chats = [];
@@ -219,7 +221,7 @@ async function openChat(chatId, otherId) {
 function loadMessages(chatId, myUid) {
   const area = document.getElementById('messages-area');
   if (!area) return;
-  area.innerHTML = '<div class="flex-center" style="padding:24px;height:100%"><div class="spinner"></div></div>';
+  area.innerHTML = '';
 
   const q = query(collection(db,'chats',chatId,'messages'), orderBy('createdAt','asc'), limit(100));
   if (msgListener) msgListener();
@@ -237,7 +239,7 @@ function loadMessages(chatId, myUid) {
 
 function renderMessages(messages, myUid, area) {
   if (!messages.length) {
-    area.innerHTML = '<div class="empty-state" style="height:100%"><div class="empty-state-icon">💬</div><p>No hay mensajes aún.<br>¡Di hola!</p></div>';
+    area.innerHTML = '<div class="empty-state" style="height:100%"><div class="empty-state-icon">[msg]</div><p>No hay mensajes aún.<br>¡Di hola!</p></div>';
     return;
   }
 
@@ -277,7 +279,7 @@ function renderBubble(msg, isSent, author) {
   } else if (msg.viewOnce && !isSent) {
     const opened = msg.viewedBy?.includes(msg.senderId) && msg.viewedBy?.includes(msg.recipientId);
     bubbleContent = `<div class="bubble-view-once ${opened ? 'opened' : ''}" data-msg-id="${msg.id}">
-      <span class="view-once-icon">📸</span>
+      <span class="view-once-icon">[cam]</span>
       <div><div class="view-once-label">${opened ? 'Ya vista' : 'Foto: ver una sola vez'}</div>
       <div class="view-once-sub">${opened ? '' : 'Toca para abrir'}</div></div>
     </div>`;
@@ -301,7 +303,7 @@ function renderBubble(msg, isSent, author) {
 
 function revealViewOnceMsg(el) {
   el.classList.add('opened');
-  el.innerHTML = `<span style="font-size:1.5rem">🔒</span><div><div class="view-once-label" style="color:var(--text-muted)">Ya vista</div></div>`;
+  el.innerHTML = `<span style="font-size:1.5rem">[L]</span><div><div class="view-once-label" style="color:var(--text-muted)">Ya vista</div></div>`;
 }
 
 /* ── Send Message ── */
@@ -325,7 +327,7 @@ async function sendMessage(chatId, content, options = {}) {
     const chatRef = doc(db, 'chats', chatId);
     await addDoc(collection(db, 'chats', chatId, 'messages'), msgData);
     await updateDoc(chatRef, {
-      lastMessage:   options.type === 'sticker' ? '🎨 Sticker' : options.type === 'image' ? '📷 Imagen' : content,
+      lastMessage:   options.type === 'sticker' ? '[art] Sticker' : options.type === 'image' ? '[cam] Imagen' : content,
       lastMessageAt: serverTimestamp()
     });
     window.playSFX('send'); // Play send SFX
@@ -460,8 +462,8 @@ async function loadUserSearch() {
   const search = async () => {
     const term = input.value.trim().toLowerCase();
     const user = getCurrentUser();
-    list.innerHTML = '<div class="flex-center" style="padding:16px"><div class="spinner spinner-sm"></div></div>';
-    const snap = await getDocs(query(collection(db,'users'), limit(20)));
+    list.innerHTML = '';
+    const snap = await getDocs(query(collection(db,'users'), limit(8)));
     const users = snap.docs.map(d => ({ uid: d.id, ...d.data() }))
       .filter(u => u.uid !== user?.uid && (!term || u.displayName?.toLowerCase().includes(term) || u.username?.toLowerCase().includes(term)));
     list.innerHTML = users.slice(0,8).map(u => `

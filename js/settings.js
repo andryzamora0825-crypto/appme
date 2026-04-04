@@ -120,7 +120,7 @@ export async function initSettings() {
         localStorage.clear();
         // Restore prefs after clear so theme/accent remain
         savePrefs(prefs);
-        showToast('Caché limpiada ✅', 'success');
+        showToast('Caché limpiada [✓]', 'success');
       },
       { title: '🗑️ Limpiar caché', confirmText: 'Limpiar', danger: false }
     );
@@ -147,7 +147,7 @@ export async function initSettings() {
     confirmDialog(
       'Esta acción es irreversible. Se eliminarán todos tus datos permanentemente.',
       () => document.getElementById('delete-account-modal')?.classList.remove('hidden'),
-      { title: '⚠️ Eliminar cuenta', confirmText: 'Continuar', danger: true }
+      { title: '[!] Eliminar cuenta', confirmText: 'Continuar', danger: true }
     );
   });
 

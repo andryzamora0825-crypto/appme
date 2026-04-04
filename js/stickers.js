@@ -94,7 +94,7 @@ async function saveSticker() {
 export async function loadStickerGallery(filterUid = null) {
   const grid = document.getElementById('sticker-gallery-grid');
   if (!grid) return;
-  grid.innerHTML = '<div class="flex-center" style="padding:40px;grid-column:1/-1"><div class="spinner"></div></div>';
+  grid.innerHTML = '';
   try {
     let q;
     if (filterUid) {
@@ -104,7 +104,7 @@ export async function loadStickerGallery(filterUid = null) {
     }
     const snap = await getDocs(q);
     if (snap.empty) {
-      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">🎨</div><h3>Sin stickers aún</h3><p>¡Crea el primero!</p></div>`;
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">[art]</div><h3>Sin stickers aún</h3><p>¡Crea el primero!</p></div>`;
       return;
     }
     const user = getCurrentUser();
@@ -121,8 +121,8 @@ export async function loadStickerGallery(filterUid = null) {
           <div class="sticker-card-author">×${s.usageCount || 0} usos</div>
         </div>
         <div class="sticker-card-actions">
-          <div class="sticker-card-btn" onclick="window.sendStickerToChat('${s.id}','${s.imageURL}','${s.name}')">💬 Chat</div>
-          <div class="sticker-card-btn" onclick="window.postSticker('${s.id}','${s.imageURL}','${s.name}')">📌 Post</div>
+          <div class="sticker-card-btn" onclick="window.sendStickerToChat('${s.id}','${s.imageURL}','${s.name}')">[msg] Chat</div>
+          <div class="sticker-card-btn" onclick="window.postSticker('${s.id}','${s.imageURL}','${s.name}')">[pin] Post</div>
         </div>
       </div>`;
     }).join('');
@@ -136,7 +136,7 @@ export async function loadStickerGallery(filterUid = null) {
 window.sendStickerToChat = async (stickerId, imageURL, name) => {
   // Store selected sticker and navigate to messages
   window._pendingSticker = { stickerId, imageURL, name };
-  showToast(`Sticker "${name}" listo para enviar 💬`, 'success');
+  showToast(`Sticker "${name}" listo para enviar [msg]`, 'success');
   import('./router.js').then(({ router }) => router.navigate('messages'));
 };
 

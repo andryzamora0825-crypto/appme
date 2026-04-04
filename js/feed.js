@@ -27,22 +27,29 @@ let postImageFile   = null;
 let feedInitialized = false;
 let isLoadingMore   = false;
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 3;
 
 /* ── Init Feed ── */
 export function initFeed() {
-  if (feedInitialized) { refreshStories(); return; }
+  if (feedInitialized) { return; }
   feedInitialized = true;
 
   setupCreatePostModal();
   setupCreatePostBar();
+  
+  // Mostrar el feed inmediatamente mientras carga
   loadFeedWithListener();
-  loadStories();
-  loadSuggestedUsers();
 
   // Load more on scroll
   const mainContent = document.querySelector('.main-content');
   mainContent?.addEventListener('scroll', handleFeedScroll);
+  
+  // Cargar contenido secundario en background (sin bloquear)
+  // Se cargarán cuando el usuario tenga espacio para verlas
+  requestAnimationFrame(() => {
+    setTimeout(() => loadStories(), 200);
+    setTimeout(() => loadSuggestedUsers(), 800);
+  });
 }
 
 function handleFeedScroll() {
@@ -56,7 +63,7 @@ function handleFeedScroll() {
 function loadFeedWithListener() {
   const container   = document.getElementById('feed-posts');
   if (!container) return;
-  container.innerHTML = createSkeletons(3);
+  container.innerHTML = '';
 
   const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'), limit(PAGE_SIZE));
   if (feedListener) feedListener();
@@ -66,13 +73,13 @@ function loadFeedWithListener() {
       return;
     }
     lastDoc = snap.docs[snap.docs.length - 1];
-    const posts = [];
-    for (const d of snap.docs) {
-      const post   = { id: d.id, ...d.data() };
-      const author = await getUserData(post.authorId);
-      posts.push({ post, author });
-    }
-    container.innerHTML = posts.map(({ post, author }) => renderPost(post, author)).join('');
+    const posts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const authorIds = [...new Set(posts.map(p => p.authorId))];
+    const authorMap = {};
+    const authorPromises = authorIds.map(id => getUserData(id).then(u => authorMap[id] = u));
+    await Promise.all(authorPromises);
+    const postsWithAuthors = posts.map(post => ({ post, author: authorMap[post.authorId] }));
+    container.innerHTML = postsWithAuthors.map(({ post, author }) => renderPost(post, author)).join('');
     attachPostHandlers();
   });
 }
@@ -85,13 +92,13 @@ async function loadMorePosts() {
   const snap = await getDocs(q);
   if (!snap.empty) {
     lastDoc = snap.docs[snap.docs.length - 1];
-    const newPosts = [];
-    for (const d of snap.docs) {
-      const post   = { id: d.id, ...d.data() };
-      const author = await getUserData(post.authorId);
-      newPosts.push({ post, author });
-    }
-    const frag = newPosts.map(({ post, author }) => renderPost(post, author)).join('');
+    const posts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const authorIds = [...new Set(posts.map(p => p.authorId))];
+    const authorMap = {};
+    const authorPromises = authorIds.map(id => getUserData(id).then(u => authorMap[id] = u));
+    await Promise.all(authorPromises);
+    const postsWithAuthors = posts.map(post => ({ post, author: authorMap[post.authorId] }));
+    const frag = postsWithAuthors.map(({ post, author }) => renderPost(post, author)).join('');
     if (container) container.insertAdjacentHTML('beforeend', frag);
     attachPostHandlers();
   }
@@ -240,7 +247,7 @@ async function loadComments(postId) {
   const list = document.getElementById(`comments-list-${postId}`);
   if (!list || list.dataset.loaded) return;
   list.dataset.loaded = '1';
-  list.innerHTML = `<div class="flex-center" style="padding:12px"><div class="spinner spinner-sm"></div></div>`;
+  list.innerHTML = '';
   const q    = query(collection(db, 'posts', postId, 'comments'), orderBy('createdAt','asc'), limit(20));
   const snap = await getDocs(q);
   if (snap.empty) { list.innerHTML = '<div style="color:var(--text-muted);font-size:0.82rem;padding:8px">Sin comentarios aún.</div>'; return; }
@@ -308,6 +315,22 @@ function setupCreatePostBar() {
 }
 
 function setupCreatePostModal() {
+  // Llenar datos del usuario
+  const user = getCurrentUser();
+  if (user) {
+    const nameEl = document.getElementById('post-author-name');
+    const avatarEl = document.getElementById('post-author-avatar');
+    if (nameEl) nameEl.textContent = user.displayName || 'Usuario';
+    if (avatarEl) {
+      if (user.photoURL) {
+        avatarEl.style.backgroundImage = `url('${user.photoURL}')`;
+        avatarEl.textContent = '';
+      } else {
+        avatarEl.textContent = (user.displayName || '?')[0].toUpperCase();
+      }
+    }
+  }
+
   const imageInput = document.getElementById('post-image-input');
   const preview    = document.getElementById('post-image-preview');
   const removeBtn  = document.getElementById('remove-post-image');
@@ -329,6 +352,7 @@ function setupCreatePostModal() {
   });
 
   document.getElementById('create-post-media-btn')?.addEventListener('click', () => imageInput?.click());
+  document.getElementById('create-post-smile-btn')?.addEventListener('click', () => showToast('Emoticones próximamente', 'info'));
 
   document.getElementById('publish-post-btn')?.addEventListener('click', publishPost);
 }
@@ -338,6 +362,7 @@ async function publishPost() {
   if (!user)    { showToast('Inicia sesión', 'info'); return; }
   const text    = document.getElementById('post-text')?.value.trim();
   const viewOnce= document.getElementById('post-view-once')?.checked || false;
+  const privacy = document.getElementById('post-privacy')?.value || 'public';
   const btn     = document.getElementById('publish-post-btn');
   if (!text && !postImageFile) { showToast('Escribe algo o agrega una imagen', 'warning'); return; }
 
@@ -356,6 +381,7 @@ async function publishPost() {
       content:      text || '',
       imageURL,
       viewOnce,
+      privacy:      privacy,
       viewedBy:     [],
       likes:        [],
       commentsCount: 0,
@@ -365,16 +391,21 @@ async function publishPost() {
     await updateDoc(doc(db, 'users', user.uid), { postsCount: increment(1) });
     closeModal('create-post-modal');
     document.getElementById('post-text').value = '';
+    document.getElementById('post-privacy').value = 'public';
+    document.getElementById('post-view-once').checked = false;
     postImageFile = null;
     document.getElementById('post-image-preview')?.parentElement.classList.add('hidden');
-    showToast('¡Post publicado! 🎉', 'success');
-    window.playSFX('send'); // PLay send SFX
+    if (document.getElementById('post-image-input')) document.getElementById('post-image-input').value = '';
+    showToast('¡Post publicado! [+]', 'success');
+    window.playSFX?.('send');
   } catch(e) {
     showToast('Error al publicar', 'error');
-    console.error(e);
+    console.error('publishPost error:', e);
   } finally {
-    btn.disabled    = false;
-    btn.textContent = 'Publicar';
+    if (btn) {
+      btn.disabled    = false;
+      btn.textContent = 'Publicar';
+    }
   }
 }
 
@@ -389,23 +420,34 @@ export async function loadStories() {
   list.innerHTML = `
     <div class="story-item" onclick="window.openUploadStory()">
       <div class="story-add-btn">
-        ➕
+        [+]
         <span class="story-add-badge">+</span>
       </div>
       <span class="story-username story-your">Mi estado</span>
     </div>`;
 
   try {
-    const q    = query(collection(db, 'posts'), where('type','==','story'), orderBy('createdAt','desc'), limit(30));
+    const q    = query(collection(db, 'posts'), where('type','==','story'), orderBy('createdAt','desc'), limit(10));
     const snap = await getDocs(q);
     const seenMap = {};
+    const stories = [];
+    const authorIds = [];
 
     for (const d of snap.docs) {
       const story  = { id: d.id, ...d.data() };
-      if (story.expiresAt?.toDate && story.expiresAt.toDate() < now) continue; // expired
+      if (story.expiresAt?.toDate && story.expiresAt.toDate() < now) continue;
       if (seenMap[story.authorId]) continue;
       seenMap[story.authorId] = true;
-      const author = await getUserData(story.authorId);
+      authorIds.push(story.authorId);
+      stories.push(story);
+    }
+
+    const authorMap = {};
+    const authorPromises = authorIds.map(id => getUserData(id).then(u => authorMap[id] = u));
+    await Promise.all(authorPromises);
+
+    for (const story of stories) {
+      const author = authorMap[story.authorId];
       const seen   = user && story.viewedBy?.includes(user.uid);
       const noteEl = author.noteText ? `<div class="story-note-bubble">${author.noteEmoji || ''}${author.noteText}</div>` : '';
       list.insertAdjacentHTML('beforeend', `
@@ -432,7 +474,7 @@ async function loadSuggestedUsers() {
   if (!container) return;
   const user = getCurrentUser();
   try {
-    const snap = await getDocs(query(collection(db, 'users'), limit(6)));
+    const snap = await getDocs(query(collection(db, 'users'), limit(3)));
     const users = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(u => u.uid !== user?.uid).slice(0,5);
     container.innerHTML = users.map(u => `
       <div class="suggested-user" onclick="window.viewProfile('${u.uid}')">
@@ -461,7 +503,7 @@ function createSkeletons(n) {
 }
 
 function emptyFeedHTML() {
-  return `<div class="empty-state"><div class="empty-state-icon">🌿</div>
+  return `<div class="empty-state"><div class="empty-state-icon">[leaf]</div>
     <h3>Sin publicaciones aún</h3>
     <p>Sé el primero en publicar algo en Zamora MSG</p>
     <button class="btn btn-primary" onclick="openModal('create-post-modal')">Crear post</button></div>`;

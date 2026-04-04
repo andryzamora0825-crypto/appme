@@ -393,7 +393,32 @@
 
 /* Feed container */
 #feed-page .content-wrap { padding: 0; max-width: 680px; }
+.feed-posts-column { flex: 1; min-width: 0; }
+.feed-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
 .feed-posts { display: flex; flex-direction: column; }
+
+@media (max-width: 900px) {
+  .feed-layout { flex-direction: column; gap: 20px; }
+}
+
+@media (max-width: 768px) {
+  .create-post-bar {
+    flex-wrap: wrap;
+    align-items: stretch;
+  }
+  .create-post-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .create-post-action {
+    width: 42px;
+    height: 42px;
+  }
+}
 
 /* Load more */
 .load-more-btn {

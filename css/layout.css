@@ -2,94 +2,6 @@
    ZAMORA MSG — Layout CSS (Sidebar, Bottom Nav, App Shell)
    ===================================================== */
 
-/* ── Splash Screen ── */
-#splash-screen {
-  position: fixed;
-  inset: 0;
-  background: var(--bg-main);
-  z-index: var(--z-splash);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-xl);
-  transition: opacity 0.5s ease, visibility 0.5s ease;
-}
-#splash-screen.fade-out {
-  opacity: 0;
-  visibility: hidden;
-}
-.splash-logo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-md);
-  animation: floatUp 3s ease-in-out infinite;
-}
-.splash-logo-icon {
-  width: 90px; height: 90px;
-  background: var(--gradient);
-  border-radius: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.8rem;
-  box-shadow: var(--shadow-glow), var(--shadow-lg);
-  position: relative;
-}
-.splash-logo-icon::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 30px;
-  background: var(--gradient);
-  z-index: -1;
-  opacity: 0.3;
-  filter: blur(12px);
-}
-.splash-logo-name {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 800;
-  font-size: 2.2rem;
-  background: var(--gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.5px;
-}
-.splash-logo-tagline {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-}
-.splash-loader {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-sm);
-}
-.splash-bar {
-  width: 160px; height: 3px;
-  background: var(--bg-surface);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.splash-bar-fill {
-  height: 100%;
-  background: var(--gradient);
-  border-radius: 2px;
-  width: 0%;
-  transition: width 2s ease;
-  box-shadow: 0 0 8px var(--primary);
-}
-.splash-version {
-  position: absolute;
-  bottom: 30px;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
 /* ── App Shell ── */
 #app {
   display: none;
@@ -400,18 +312,70 @@
 .fab svg { width: 24px; height: 24px; }
 
 /* ── Responsive ── */
-@media (max-width: 768px) {
-  .sidebar { display: none; }
-  .top-bar { display: flex; }
-  .bottom-nav { display: block; }
-  .main-content { padding-bottom: 80px; }
+@media (max-width: 992px) {
+  .sidebar {
+    display: none !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  .top-bar {
+    display: flex;
+    background: rgba(6,10,12,0.94);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    animation: fadeInDown 0.35s ease;
+  }
+  .bottom-nav {
+    display: block;
+    animation: slideUp 0.32s ease;
+    background: rgba(6,10,12,0.95);
+    backdrop-filter: blur(18px);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 -10px 28px rgba(0,0,0,0.18);
+  }
+  .bottom-nav-item {
+    padding: 9px 14px;
+    min-width: 48px;
+  }
+  .bottom-nav-item.active {
+    color: var(--primary);
+    transform: translateY(-1px);
+  }
+  .bottom-nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--primary);
+    opacity: 0.85;
+  }
+  .main-content { padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); }
   .content-wrap { padding: var(--space-md); }
   .page-header { padding: 12px var(--space-md); }
-  .fab { bottom: 90px; right: 16px; width: 50px; height: 50px; }
+  .fab { display: none !important; }
 }
 
 @media (max-width: 480px) {
-  .fab { display: none; }
+  .fab { display: none !important; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInDown {
+  from { transform: translateY(-8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 /* ── Right Panel (Optional) ── */
@@ -431,18 +395,6 @@
 }
 @media (max-width: 1100px) {
   .right-panel { display: none; }
-}
-
-/* ── Loading Overlay ── */
-.page-loader {
-  position: absolute;
-  inset: 0;
-  background: var(--bg-overlay);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
-  border-radius: inherit;
 }
 
 /* ── Empty State ── */

@@ -33,14 +33,12 @@ const googleProvider = new GoogleAuthProvider();
 let authCallbacks = [];
 export function onAuthChange(cb) { authCallbacks.push(cb); }
 
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, (user) => {
   if (user) {
-    // Update last seen
-    try {
-      await updateDoc(doc(db, 'users', user.uid), {
-        lastSeen: serverTimestamp(), online: true
-      });
-    } catch (e) {}
+    // Update last seen (fire and forget, no esperar)
+    updateDoc(doc(db, 'users', user.uid), {
+      lastSeen: serverTimestamp(), online: true
+    }).catch(e => console.error('Error updating lastSeen:', e));
   }
   authCallbacks.forEach(cb => cb(user));
 });
@@ -225,7 +223,7 @@ export function initAuthUI() {
     setButtonLoading(btn, true);
     try {
       await loginWithEmail(email, password);
-      showToast('¡Bienvenido de vuelta! 👋', 'success');
+      showToast('¡Bienvenido de vuelta! [wave]', 'success');
     } catch (err) {
       setButtonLoading(btn, false, `<span>Iniciar Sesión →</span>`);
       showError(translateFirebaseError(err.code));
@@ -247,7 +245,7 @@ export function initAuthUI() {
     setButtonLoading(btn, true);
     try {
       await registerWithEmail(name, email, password, avatarFileForRegister);
-      showToast('¡Cuenta creada! Bienvenido a Zamora MSG 🎉', 'success');
+      showToast('¡Cuenta creada! Bienvenido a Zamora MSG [+]', 'success');
     } catch (err) {
       setButtonLoading(btn, false, `<span>Crear Cuenta →</span>`);
       showError(translateFirebaseError(err.code));
@@ -262,7 +260,7 @@ export function initAuthUI() {
     clearErrors();
     try {
       await loginWithGoogle();
-      showToast('¡Bienvenido! 👋', 'success');
+      showToast('¡Bienvenido! [wave]', 'success');
     } catch (err) {
       if (err.code !== 'auth/popup-closed-by-user') showError(translateFirebaseError(err.code));
     }
@@ -282,12 +280,12 @@ export function initAuthUI() {
     setButtonLoading(btn, true);
     try {
       await sendPasswordReset(email);
-      showToast('Correo enviado. Revisa tu bandeja de entrada 📧', 'success');
+      showToast('Correo enviado. Revisa tu bandeja de entrada [✉]', 'success');
       document.getElementById('forgot-success').classList.remove('hidden');
     } catch (err) {
       showError(translateFirebaseError(err.code));
     } finally {
-      setButtonLoading(btn, false, '📧 Enviar correo');
+      setButtonLoading(btn, false, '[✉] Enviar correo');
     }
   });
 

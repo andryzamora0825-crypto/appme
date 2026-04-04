@@ -96,7 +96,7 @@ async function renderProfile(uid, isOwn) {
   if (noteWrap) {
     if (u.noteText) {
       noteWrap.classList.remove('hidden');
-      setText('profile-note-emoji', u.noteEmoji || '💬');
+      setText('profile-note-emoji', u.noteEmoji || '[●]');
       setText('profile-note-text',  u.noteText);
     } else if (isOwn) {
       noteWrap.classList.remove('hidden');
@@ -120,7 +120,7 @@ async function renderProfile(uid, isOwn) {
       
       actionsEl.innerHTML = `
         <button class="btn ${followClass} btn-sm" id="follow-btn-main" onclick="window.toggleFollowUser('${uid}', ${isFollowing})">${followText}</button>
-        <button class="btn btn-secondary btn-sm" onclick="window.openChatWith('${uid}')">💬 Mensaje</button>`;
+        <button class="btn btn-secondary btn-sm" onclick="window.openChatWith('${uid}')">[msg] Mensaje</button>`;
     }
   }
 
@@ -154,7 +154,7 @@ async function handleCoverUpload(e) {
     const url = await uploadCover(file);
     const coverEl = document.getElementById('profile-cover');
     if (coverEl) { coverEl.src = url; coverEl.classList.remove('hidden'); }
-    showToast('Portada actualizada ✅', 'success');
+    showToast('Portada actualizada [✓]', 'success');
   } catch(e) { showToast('Error al subir portada', 'error'); }
 }
 
@@ -168,7 +168,7 @@ async function handleAvatarUpload(e) {
     const url = await uploadAvatar(file);
     const avatarEl = document.getElementById('profile-avatar');
     if (avatarEl) { avatarEl.src = url; avatarEl.style.display = 'block'; }
-    showToast('Foto de perfil actualizada ✅', 'success');
+    showToast('Foto de perfil actualizada [✓]', 'success');
   } catch(e) { showToast('Error al subir foto', 'error'); }
 }
 
@@ -189,7 +189,7 @@ function setupProfileTabs(uid, isOwn) {
 async function renderTabContent(uid, tab) {
   const content = document.getElementById('profile-tab-content');
   if (!content) return;
-  content.innerHTML = '<div class="flex-center" style="padding:40px"><div class="spinner"></div></div>';
+  content.innerHTML = '';
 
   switch(tab) {
     case 'posts':    await renderPostsGrid(uid, content); break;
@@ -202,7 +202,7 @@ async function renderTabContent(uid, tab) {
 async function renderPostsGrid(uid, container) {
   const q    = query(collection(db,'posts'), where('authorId','==',uid), where('type','==','post'), orderBy('createdAt','desc'), limit(30));
   const snap = await getDocs(q);
-  if (snap.empty) { container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📝</div><h3>Sin publicaciones</h3></div>`; return; }
+  if (snap.empty) { container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">[•]</div><h3>Sin publicaciones</h3></div>`; return; }
 
   const posts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   container.innerHTML = `<div class="posts-grid">${posts.map(p => {
@@ -210,8 +210,8 @@ async function renderPostsGrid(uid, container) {
       <div class="post-grid-item" onclick="openImageLightbox('${p.imageURL}')">
         <img src="${p.imageURL}" alt="post">
         <div class="post-grid-overlay">
-          <span class="post-grid-stat">❤️ ${p.likes?.length||0}</span>
-          <span class="post-grid-stat">💬 ${p.commentsCount||0}</span>
+          <span class="post-grid-stat">[heart] ${p.likes?.length||0}</span>
+          <span class="post-grid-stat">[msg] ${p.commentsCount||0}</span>
         </div>
       </div>`;
     if (p.stickerURL) return `
@@ -228,7 +228,7 @@ async function renderPostsGrid(uid, container) {
 async function renderStickersGallery(uid, container) {
   const q    = query(collection(db,'stickers'), where('authorId','==',uid), orderBy('createdAt','desc'), limit(40));
   const snap = await getDocs(q);
-  if (snap.empty) { container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🎨</div><h3>Sin stickers creados</h3></div>`; return; }
+  if (snap.empty) { container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">[art]</div><h3>Sin stickers creados</h3></div>`; return; }
   container.innerHTML = `<div class="stickers-gallery">${snap.docs.map(d => {
     const s = { id: d.id, ...d.data() };
     return `<div class="sticker-gallery-item" onclick="openImageLightbox('${s.imageURL}')">
@@ -243,7 +243,7 @@ async function renderPhotosGrid(uid, container) {
   const q    = query(collection(db,'posts'), where('authorId','==',uid), where('type','==','post'), orderBy('createdAt','desc'), limit(50));
   const snap = await getDocs(q);
   const withImages = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(p => p.imageURL);
-  if (!withImages.length) { container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🖼️</div><h3>Sin fotos</h3></div>`; return; }
+  if (!withImages.length) { container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">[img]</div><h3>Sin fotos</h3></div>`; return; }
   container.innerHTML = `<div class="posts-grid">${withImages.map(p => `
     <div class="post-grid-item" onclick="openImageLightbox('${p.imageURL}')">
       <img src="${p.imageURL}" alt="foto">
@@ -316,7 +316,7 @@ async function saveProfile() {
   try {
     await updateDoc(doc(db,'users',user.uid), updates);
     closeModal('edit-profile-modal');
-    showToast('Perfil actualizado ✅', 'success');
+    showToast('Perfil actualizado [✓]', 'success');
     await initProfile();
   } catch(e) {
     showToast('Error al guardar', 'error');
@@ -358,7 +358,7 @@ window.toggleFollowUser = async (targetUid, isCurrentlyFollowing) => {
         following: arrayUnion(targetUid),
         followingCount: increment(1)
       });
-      showToast('¡Ahora sigues a este usuario! 🎉', 'success');
+      showToast('¡Ahora sigues a este usuario! [+]', 'success');
       window.playSFX('like'); // Play sound effect
     }
     
